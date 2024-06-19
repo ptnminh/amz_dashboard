@@ -125,6 +125,38 @@ const NewCampaigns = () => {
           <div className={styles.col}>
             <Card
               className={cn(styles.card)}
+              title="Product Line"
+              classTitle="title-orange"
+              head={
+                <div className={cn(styles.nav, "tablet-hide")}>
+                  {PRODUCT_LINES_OPTIONS.map((x, index) => (
+                    <div
+                      className={cn(styles.link, {
+                        [styles.active]: x === activeProductLineTab,
+                      })}
+                      onClick={() => setActiveProductLineTab(x)}
+                      key={index}
+                    >
+                      {x}
+                    </div>
+                  ))}
+                </div>
+              }
+            >
+              <div
+                className={cn(
+                  "button-stroke button-small",
+                  styles.createButton
+                )}
+                type="button"
+              >
+                <Icon name="link" size="12" />
+                <span>Sync</span>
+              </div>
+              <Preview />
+            </Card>
+            <Card
+              className={cn(styles.card)}
               title="KW/ASIN"
               classTitle="title-green"
             >
@@ -167,38 +199,7 @@ const NewCampaigns = () => {
                 </div>
               </div>
             </Card>
-            <Card
-              className={cn(styles.card)}
-              title="Product Line"
-              classTitle="title-orange"
-              head={
-                <div className={cn(styles.nav, "tablet-hide")}>
-                  {PRODUCT_LINES_OPTIONS.map((x, index) => (
-                    <div
-                      className={cn(styles.link, {
-                        [styles.active]: x === activeProductLineTab,
-                      })}
-                      onClick={() => setActiveProductLineTab(x)}
-                      key={index}
-                    >
-                      {x}
-                    </div>
-                  ))}
-                </div>
-              }
-            >
-              <div
-                className={cn(
-                  "button-stroke button-small",
-                  styles.createButton
-                )}
-                type="button"
-              >
-                <Icon name="link" size="12" />
-                <span>Sync</span>
-              </div>
-              <Preview />
-            </Card>
+
             <DefaultValue
               className={styles.defaultValue}
               activeDefaultValueTab={activeDefaultValueTab}
