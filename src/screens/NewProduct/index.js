@@ -94,6 +94,35 @@ const NewCampaigns = () => {
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className={styles.row}>
           <div className={styles.col}>
+            <CampaignInfo
+              className={styles.card}
+              campType={campType}
+              setCampType={setCampType}
+              channel={channel}
+              setChannel={setChannel}
+              store={store}
+              setStore={setStore}
+              selectedCreateCampMethod={selectedCreateCampMethodForSKU}
+              handleChange={handleChangeForSKU}
+              handleSubmit={handleSubmit}
+              register={register}
+              errors={errors}
+            />
+            <Card
+              className={cn(styles.card)}
+              title="Kết quả"
+              classTitle="title-red"
+            >
+              <Editor
+                state={content}
+                onChange={setContent}
+                classEditor={styles.editor}
+                label="Chi tiết kết quả"
+                tooltip="Description Message to reviewer"
+              />
+            </Card>
+          </div>
+          <div className={styles.col}>
             <Card
               className={cn(styles.card)}
               title="KW/ASIN"
@@ -184,35 +213,6 @@ const NewCampaigns = () => {
               register={register}
               errors={errors}
             />
-          </div>
-          <div className={styles.col}>
-            <CampaignInfo
-              className={styles.card}
-              campType={campType}
-              setCampType={setCampType}
-              channel={channel}
-              setChannel={setChannel}
-              store={store}
-              setStore={setStore}
-              selectedCreateCampMethod={selectedCreateCampMethodForSKU}
-              handleChange={handleChangeForSKU}
-              handleSubmit={handleSubmit}
-              register={register}
-              errors={errors}
-            />
-            <Card
-              className={cn(styles.card)}
-              title="Kết quả"
-              classTitle="title-red"
-            >
-              <Editor
-                state={content}
-                onChange={setContent}
-                classEditor={styles.editor}
-                label="Chi tiết kết quả"
-                tooltip="Description Message to reviewer"
-              />
-            </Card>
           </div>
         </div>
       </form>
