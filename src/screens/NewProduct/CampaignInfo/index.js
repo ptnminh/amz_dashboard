@@ -9,7 +9,7 @@ import Checkbox from "../../../components/Checkbox";
 import {
   CAMP_TYPES,
   CHANNELS,
-  CREATE_CAMP_METHOD,
+  CREATE_SKU_CAMP_METHOD,
   STORES,
 } from "../../../constant";
 
@@ -57,7 +57,7 @@ const CampaignInfo = ({
             register={register("SKUs", { required: true })}
             error={errors.SKUs}
           />
-          {CREATE_CAMP_METHOD.map((x, index) => (
+          {CREATE_SKU_CAMP_METHOD.map((x, index) => (
             <Checkbox
               className={styles.checkbox}
               content={x.title}
@@ -108,17 +108,17 @@ const CampaignInfo = ({
       </div>
       <div className={styles.actions}>
         <button
+          className={cn("button-stroke-red button-small", styles.clearButton)}
+        >
+          <Icon name="trash" size="16" />
+          <span>Clear</span>
+        </button>
+        <button
           className={cn("button-stroke button-small", styles.createButton)}
           type="submit"
         >
-          <Icon name="plus" size="12" />
+          <Icon name="plus" size="16" />
           <span>Tạo</span>
-        </button>
-        <button
-          className={cn("button-stroke-red button-small", styles.clearButton)}
-        >
-          <Icon name="trash" size="12" />
-          <span>Clear</span>
         </button>
       </div>
     </Card>

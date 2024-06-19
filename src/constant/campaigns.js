@@ -19,7 +19,7 @@ export const EXPRESSION_TYPES = [
 export const STORES = ["PFH", "QZL", "GGT", "KH", "PG", "PPN", "BIG"];
 export const CHANNELS = ["FBM", "FBA"];
 export const CAMP_TYPES = ["AUTO", "KEYWORD", "ASIN"];
-export const CREATE_CAMP_METHOD = [
+export const CREATE_SKU_CAMP_METHOD = [
   {
     id: 1,
     title: "Chung 1 camp",
@@ -30,8 +30,21 @@ export const CREATE_CAMP_METHOD = [
   },
   {
     id: 3,
-    title: "Tối đa N camp",
+    title: "Tối đa N SKU/Camp",
   },
 ];
-
+export const CREATE_KW_CAMP_METHOD = [
+  {
+    id: 1,
+    title: "Tất cả KW/ASIN",
+  },
+  {
+    id: 2,
+    title: "Tối đa 10 KW/ASIN",
+  },
+  {
+    id: 3,
+    title: "Tối đa N KW/ASIN",
+  },
+];
 export const PRODUCT_LINES_OPTIONS = ["Default"];

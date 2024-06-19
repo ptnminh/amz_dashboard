@@ -9,13 +9,14 @@ import Editor from "../../components/Editor";
 import {
   CAMP_TYPES,
   CHANNELS,
-  CREATE_CAMP_METHOD,
+  CREATE_SKU_CAMP_METHOD,
   EXPRESSION_TYPES,
   MATCH_TYPES,
   PRODUCT_LINES_OPTIONS,
   STORES,
   STRATEGIES,
   DEFAULT_VALUES_NAVIGATIONS,
+  CREATE_KW_CAMP_METHOD,
 } from "../../constant";
 import Checkbox from "../../components/Checkbox";
 import TextInput from "../../components/TextInput";
@@ -174,7 +175,7 @@ const NewCampaigns = () => {
                     register={register("keywords", { required: true })}
                     error={errors.keywords}
                   />
-                  {CREATE_CAMP_METHOD.map((x, index) => (
+                  {CREATE_KW_CAMP_METHOD.map((x, index) => (
                     <Checkbox
                       className={styles.checkbox}
                       content={x.title}
