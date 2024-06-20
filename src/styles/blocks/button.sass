@@ -26,6 +26,7 @@
         margin-left: 8px
    
 .button-stroke,
+.button-stroke-purple,
 .button-stroke-red
   background: none
   box-shadow: 0 0 0 2px $n3 inset
@@ -61,6 +62,18 @@
   &.active
     background: $p3
     box-shadow: 0 0 0 2px $p3 inset
+    color: $n1
+    svg
+      fill: $n1
+
+.button-stroke-purple
+  color: $p4
+  svg
+    fill: $p4
+  &:hover,
+  &.active
+    background: $p4
+    box-shadow: 0 0 0 2px $p4 inset
     color: $n1
     svg
       fill: $n1

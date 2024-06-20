@@ -1,6 +1,6 @@
 export const DEFAULT_VALUES_NAVIGATIONS = ["Default", "Edit"];
 export const STRATEGIES = ["DOWN_ONLY", "UP_AND_DOWN"];
-export const MATCH_TYPES = ["Broad", "Exact", "Phrase"];
+export const MATCH_TYPES = ["BROAD", "EXACT", "PHRASE"];
 export const EXPRESSION_TYPES = [
   "ASIN_SAME_AS",
   "ASIN_CATEGORY_SAME_AS",
@@ -47,4 +47,51 @@ export const CREATE_KW_CAMP_METHOD = [
     title: "Tối đa N KW/ASIN",
   },
 ];
-export const PRODUCT_LINES_OPTIONS = ["Default"];
+export const PRODUCT_LINES_OPTIONS = ["Default", "New"];
+export const STORE_PREFIX_BRAND = {
+  KH: {
+    store: "Kool House",
+    prefix: "JM",
+    brand: "Joymarke",
+    nasFolderIndex: 5,
+  },
+  PG: {
+    store: "Pawfect Gifts",
+    prefix: "PFR",
+    brand: "Pawfery",
+    nasFolderIndex: 4,
+  },
+  PPN: {
+    store: "Perfect Print Nations",
+    prefix: "PPN",
+    brand: "Pafira",
+    nasFolderIndex: 3,
+  },
+  BIG: {
+    store: "Big Inspired Gifts",
+    prefix: "BIG",
+    brand: "Jovish",
+    nasFolderIndex: 2,
+  },
+  GGT: {
+    store: "GadgetsTalk",
+    prefix: "GGT",
+    brand: "GadgetsTalk",
+    nasFolderIndex: 1,
+  },
+  PFH: {
+    store: "Pawfect House",
+    prefix: "PFH",
+    brand: "Pawfect House",
+  },
+  QZL: {
+    store: "Doptika",
+    prefix: "QZL",
+    brand: "Doptika",
+  },
+};
+export const hostAPI = process.env.REACT_APP_BACKEND_URL;
+export const MAPPED_STRATEGY = {
+  DOWN_ONLY: "LEGACY_FOR_SALES",
+  UP_AND_DOWN: "AUTO_FOR_SALES",
+};

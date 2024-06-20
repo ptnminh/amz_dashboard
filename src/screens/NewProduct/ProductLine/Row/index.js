@@ -1,8 +1,7 @@
 import React from "react";
 import styles from "./Row.module.sass";
 import cn from "classnames";
-import { Tooltip } from "react-tooltip";
-import Icon from "../../../../../components/Icon";
+
 const Row = ({
   item,
   value,
@@ -17,31 +16,26 @@ const Row = ({
       <div
         className={cn(
           styles.row,
-          { [styles.selected]: activeId === item.campaignName },
+          { [styles.selected]: activeId === item.portfolioId },
           { [styles.active]: activeTable }
         )}
       >
         <div className={styles.col}>
-          <div className={styles.user}>{item.campaignName}</div>
+          <div className={styles.user}>{item.portfolio}</div>
         </div>
 
         <div className={styles.col}>
           <div className={cn("status-green-dark", styles.purchase)}>
-            {item.skus}
+            {item.productLine}
           </div>
         </div>
         <div className={styles.col}>
           <div className={styles.lifetime}>
-            <a
-              data-tooltip-id="my-tooltip"
-              data-tooltip-content={item.asins || item.keywords}
-              data-tooltip-place="top"
-            >
-              <Icon name="info" size={12} />
-            </a>
-            <Tooltip id="my-tooltip" />
-            <div className={styles.price}>{item.asins || item.keywords}</div>
+            <div className={styles.price}>{item.portfolioId}</div>
           </div>
+        </div>
+        <div className={styles.col}>
+          <div className={styles.user}>{item.store}</div>
         </div>
       </div>
     </>

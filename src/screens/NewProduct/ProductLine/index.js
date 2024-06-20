@@ -2,9 +2,10 @@ import React, { useState } from "react";
 import styles from "./Table.module.sass";
 import cn from "classnames";
 import Row from "./Row";
+import { map } from "lodash";
 
 const Table = ({ className, activeTable, setActiveTable, data }) => {
-  const [activeId, setActiveId] = useState(data[0]?.campaignName);
+  const [activeId, setActiveId] = useState(data[0]?.portfolioId);
 
   const [selectedFilters, setSelectedFilters] = useState([]);
 
@@ -20,11 +21,12 @@ const Table = ({ className, activeTable, setActiveTable, data }) => {
     <div className={cn(styles.wrapper, className)}>
       <div className={cn(styles.table)}>
         <div className={cn(styles.row, { [styles.active]: activeTable })}>
-          <div className={styles.col}>Campaign Name</div>
-          <div className={styles.col}>SKUs</div>
-          <div className={styles.col}>KW/ASINs</div>
+          <div className={styles.col}>Portfolio</div>
+          <div className={styles.col}>Product Line</div>
+          <div className={styles.col}>Portfolio ID</div>
+          <div className={styles.col}>Store</div>
         </div>
-        {data?.map((x, index) => (
+        {map(data, (x, index) => (
           <Row
             item={x}
             key={index}

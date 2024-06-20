@@ -2,7 +2,7 @@ import React from "react";
 import cn from "classnames";
 import styles from "./TooltipGlodal.module.sass";
 import Icon from "../Icon";
-import ReactTooltip from "react-tooltip";
+import { Tooltip as ReactTooltip } from "react-tooltip";
 
 const TooltipGlodal = () => {
   return (

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import cn from "classnames";
 import styles from "./CampaignInfo.module.sass";
 import Card from "../../../components/Card";
@@ -12,6 +12,7 @@ import {
   CREATE_SKU_CAMP_METHOD,
   STORES,
 } from "../../../constant";
+import { isEmpty } from "lodash";
 
 const CampaignInfo = ({
   className,
@@ -25,7 +26,16 @@ const CampaignInfo = ({
   setChannel,
   register,
   errors,
+  onSubmit,
+  setVisibleReviewTable,
+  setReviewData,
+  handleResetData,
+  previewData,
+  handlePreviewData,
 }) => {
+  useEffect(() => {
+    if (!isEmpty(previewData)) setVisibleReviewTable(true);
+  }, [previewData]);
   return (
     <Card
       className={cn(styles.card, className)}
@@ -69,13 +79,14 @@ const CampaignInfo = ({
           {selectedCreateCampMethod === 3 && (
             <TextInput
               className={styles.maximumCamp}
-              name="prefix"
+              name="maximumSKUPerCampaign"
               type="number"
               placeholder="3"
               tooltip="BT-P005_Gr_1kw"
               error={errors.maximumSKUPerCampaign}
               register={register("maximumSKUPerCampaign", {
                 required: true,
+                valueAsNumber: true,
               })}
             />
           )}
@@ -98,7 +109,7 @@ const CampaignInfo = ({
         />{" "}
         <TextInput
           className={styles.field}
-          name="prefix"
+          name="extendPrefix"
           type="text"
           placeholder="Occasions (Optional)"
           tooltip="BT-P005_Gr_1kw"
@@ -107,12 +118,25 @@ const CampaignInfo = ({
         />
       </div>
       <div className={styles.actions}>
-        <button
+        <div
           className={cn("button-stroke-red button-small", styles.clearButton)}
+          style={{ cursor: "pointer" }}
+          onClick={handleResetData}
         >
           <Icon name="trash" size="16" />
           <span>Clear</span>
-        </button>
+        </div>
+        <div
+          className={cn(
+            "button-stroke-purple button-small",
+            styles.clearButton
+          )}
+          style={{ cursor: "pointer" }}
+          onClick={handlePreviewData}
+        >
+          <Icon name="repeat" size="16" />
+          <span>Preview</span>
+        </div>
         <button
           className={cn("button-stroke button-small", styles.createButton)}
           type="submit"

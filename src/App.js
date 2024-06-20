@@ -1,5 +1,5 @@
 import "react-loading-skeleton/dist/skeleton.css";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "./styles/app.sass";
 import Page from "./components/Page";
 import Home from "./screens/Home";
@@ -30,200 +30,179 @@ import PageList from "./screens/PageList";
 function App() {
   return (
     <Router>
-      <Switch>
+      <Routes>
         <Route
-          exact
           path="/"
-          render={() => (
+          element={
             <Page title="Dashboard">
-              <Home />
+              <NewCampaigns />
             </Page>
-          )}
+          }
         />
         <Route
-          exact
           path="/campaigns/dashboard"
-          render={() => (
+          element={
             <Page title="Campaigns dashboard">
-              <ProductsDashboard />
+              <NewCampaigns />
             </Page>
-          )}
+          }
         />
         <Route
-          exact
           path="/campaigns/add"
-          render={() => (
+          element={
             <Page title="Campaigns">
               <NewCampaigns />
             </Page>
-          )}
+          }
         />
         <Route
-          exact
           path="/campaigns/drafts"
-          render={() => (
+          element={
             <Page title="Drafts">
               <Drafts />
             </Page>
-          )}
+          }
         />
         <Route
-          exact
           path="/campaigns/released"
-          render={() => (
+          element={
             <Page title="Released">
               <Released />
             </Page>
-          )}
+          }
         />
         <Route
-          exact
           path="/campaigns/comments"
-          render={() => (
+          element={
             <Page title="Comments">
               <Comments />
             </Page>
-          )}
+          }
         />
         <Route
-          exact
           path="/campaigns/scheduled"
-          render={() => (
+          element={
             <Page title="Scheduled">
               <Scheduled />
             </Page>
-          )}
+          }
         />
         <Route
-          exact
           path="/customers/overview"
-          render={() => (
+          element={
             <Page title="Customers">
               <Customers />
             </Page>
-          )}
+          }
         />
         <Route
-          exact
           path="/customers/customer-list"
-          render={() => (
+          element={
             <Page title="Customer list">
               <CustomerList />
             </Page>
-          )}
+          }
         />
         <Route
-          exact
           path="/shop"
-          render={() => (
+          element={
             <Page wide>
               <Shop />
             </Page>
-          )}
+          }
         />
         <Route
-          exact
           path="/income/earning"
-          render={() => (
+          element={
             <Page title="Earning">
               <Earning />
             </Page>
-          )}
+          }
         />
         <Route
-          exact
           path="/income/refunds"
-          render={() => (
+          element={
             <Page title="Refunds">
               <Refunds />
             </Page>
-          )}
+          }
         />
         <Route
-          exact
           path="/income/payouts"
-          render={() => (
+          element={
             <Page title="Payouts">
               <Payouts />
             </Page>
-          )}
+          }
         />
         <Route
-          exact
           path="/income/statements"
-          render={() => (
+          element={
             <Page title="Statements">
               <Statements />
             </Page>
-          )}
+          }
         />
         <Route
-          exact
           path="/promote"
-          render={() => (
+          element={
             <Page title="Promote">
               <Promote />
             </Page>
-          )}
+          }
         />
         <Route
-          exact
           path="/notification"
-          render={() => (
+          element={
             <Page title="Notification">
               <Notification />
             </Page>
-          )}
+          }
         />
         <Route
-          exact
           path="/settings"
-          render={() => (
+          element={
             <Page title="Settings">
               <Settings />
             </Page>
-          )}
+          }
         />
         <Route
-          exact
           path="/upgrade-to-pro"
-          render={() => (
+          element={
             <Page title="Upgrade to Pro">
               <UpgradeToPro />
             </Page>
-          )}
+          }
         />
         <Route
-          exact
           path="/message-center"
-          render={() => (
+          element={
             <Page title="Message center">
               <MessageCenter />
             </Page>
-          )}
+          }
         />
         <Route
-          exact
           path="/explore-creators"
-          render={() => (
+          element={
             <Page title="Explore creators">
               <ExploreCreators />
             </Page>
-          )}
+          }
         />
         <Route
-          exact
           path="/affiliate-center"
-          render={() => (
+          element={
             <Page title="Affiliate center">
               <AffiliateCenter />
             </Page>
-          )}
+          }
         />
-        <Route exact path="/sign-up" render={() => <SignUp />} />
-        <Route exact path="/sign-in" render={() => <SignIn />} />
-        <Route exact path="/pagelist" component={PageList} />
-      </Switch>
+        <Route path="/sign-up" element={<SignUp />} />
+        <Route path="/sign-in" element={<SignIn />} />
+        <Route path="/pagelist" element={<PageList />} />
+      </Routes>
     </Router>
   );
 }

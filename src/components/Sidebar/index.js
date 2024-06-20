@@ -6,7 +6,6 @@ import Icon from "../Icon";
 import Theme from "../Theme";
 import Dropdown from "./Dropdown";
 import Help from "./Help";
-import Image from "../Image";
 import { Logo } from "./logo";
 
 const navigation = [
@@ -21,10 +20,10 @@ const navigation = [
     icon: "diamond",
     add: true,
     dropdown: [
-      {
-        title: "Dashboard",
-        url: "/campaigns/dashboard",
-      },
+      // {
+      //   title: "Dashboard",
+      //   url: "/campaigns/add",
+      // },
       // {
       //   title: "Drafts",
       //   url: "/campaigns/drafts",

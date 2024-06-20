@@ -1,4 +1,4 @@
-@import ../../../../../styles/helpers
+@import ../../../../styles/helpers
 
 .row
     display: table-row
@@ -30,14 +30,17 @@
     &.active.selected
         // background: $n3
         +dark
-            background: $n6
+            // background: $n6
             box-shadow: inset 0px -2px 1px rgba(0, 0, 0, 0.05), inset 0px 1px 1px rgba(255, 255, 255, 0.08)
         .col
             &:first-child
                 border-radius: 12px 0 0 12px
             &:nth-child(2)
+                // padding-right: 40px
                 border-radius: 0 12px 12px 0
+            
                 
+
 .col
     position: relative
     display: table-cell
@@ -144,10 +147,6 @@
     border-radius: 6px
     background: $n3
     transition: backround .2s
-    width: 500px
-    white-space: nowrap
-    overflow: hidden
-    text-overflow: ellipsis
     +dark
         background: $n6
 

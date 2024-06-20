@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { withRouter } from "react-router-dom";
 import cn from "classnames";
 import styles from "./Page.module.sass";
 import Sidebar from "../Sidebar";
@@ -31,4 +30,4 @@ const Page = ({ wide, children, title }) => {
   );
 };
 
-export default withRouter(Page);
+export default Page;

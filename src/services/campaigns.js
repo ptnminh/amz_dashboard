@@ -1,12 +1,12 @@
 import axios from "axios";
-import { isEmpty } from "lodash";
 import { hostAPI } from "../constant";
-export const portfolioServices = {
-  syncPortfolio: async ({ store, prefix }) => {
+import { isEmpty } from "lodash";
+
+export const campaignServices = {
+  createCamps: async (data) => {
     try {
-      const response = await axios.post(`${hostAPI}/api/portfolios/sync`, {
-        store,
-        prefix,
+      const response = await axios.post(`${hostAPI}/api/campaigns/v2/create`, {
+        data,
       });
       const { data: result } = response;
       return isEmpty(result?.data) ? false : result?.data;
