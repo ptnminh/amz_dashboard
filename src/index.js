@@ -15,11 +15,9 @@ if (!container) {
   const root = createRoot(container);
 
   root.render(
-    <React.StrictMode>
-      <MantineProvider>
-        <Notifications />
-        <App />
-      </MantineProvider>
-    </React.StrictMode>
+    <MantineProvider>
+      <Notifications />
+      <App />
+    </MantineProvider>
   );
 }

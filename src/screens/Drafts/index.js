@@ -1,31 +1,82 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import cn from "classnames";
 import styles from "./Drafts.module.sass";
 import Card from "../../components/Card";
 import Form from "../../components/Form";
 
-import { campaigns } from "../../mocks/campaigns";
 import Table from "./Table";
 import { Pagination } from "@mantine/core";
 import Icon from "../../components/Icon";
-import { isEmpty } from "lodash";
+import { isEmpty, map } from "lodash";
+import { campaignServices } from "../../services";
+import { useDisclosure } from "@mantine/hooks";
+import { showNotification } from "../../utils/index";
 
-const Drafts = () => {
+const CampaignHistories = () => {
   const [search, setSearch] = useState("");
   const [visibleModalDuplicate, setVisibleModalDuplicate] = useState(false);
+  const [campaigns, setCampaigns] = useState([]);
+  const [pagination, setPagination] = useState({
+    currentPage: 1,
+    totalPages: 1,
+  });
+
+  const [
+    visibleLoadingCampaignHistories,
+    {
+      open: openLoadingCampaignHistories,
+      close: closeLoadingCampaignHistories,
+    },
+  ] = useDisclosure(false);
+
+  const fetchCampaigns = async (page = 1) => {
+    openLoadingCampaignHistories();
+    try {
+      const response = await campaignServices.getCampaignHistories({
+        search,
+        page,
+      });
+      console.log(response);
+      const { data, pagination } = response;
+
+      if (data) {
+        setCampaigns(data);
+        setPagination(pagination);
+      } else {
+        showNotification("Thất bại", "Không tìm thấy Campaigns", "red");
+      }
+    } catch (error) {
+      showNotification("Thất bại", "Có lỗi xảy ra", "red");
+    } finally {
+      closeLoadingCampaignHistories();
+    }
+  };
+
+  useEffect(() => {
+    fetchCampaigns(pagination.currentPage);
+  }, [search, pagination.currentPage]);
 
   const handleSubmit = (e) => {
-    alert();
+    e.preventDefault();
+    fetchCampaigns(1);
   };
 
   const [selectedFilters, setSelectedFilters] = useState([]);
 
   const handleChangeCampaignName = (id) => {
-    if (selectedFilters.includes(id)) {
-      setSelectedFilters(selectedFilters.filter((x) => x !== id));
-    } else {
-      setSelectedFilters((selectedFilters) => [...selectedFilters, id]);
-    }
+    setSelectedFilters((prev) =>
+      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
+    );
+  };
+
+  const handleSelectAllCampaigns = () => {
+    setSelectedFilters((prev) =>
+      isEmpty(prev) ? map(campaigns, (x) => x.campaignName) : []
+    );
+  };
+
+  const handlePageChange = (page) => {
+    setPagination((prev) => ({ ...prev, currentPage: page }));
   };
 
   return (
@@ -41,7 +92,7 @@ const Drafts = () => {
               className={styles.form}
               value={search}
               setValue={setSearch}
-              onSubmit={() => handleSubmit()}
+              onSubmit={handleSubmit}
               placeholder="Search Campaign"
               type="text"
               name="search"
@@ -70,20 +121,20 @@ const Drafts = () => {
             selectedFilters={selectedFilters}
             visibleModalDuplicate={visibleModalDuplicate}
             setVisibleModalDuplicate={setVisibleModalDuplicate}
+            handleSelectAllCampaigns={handleSelectAllCampaigns}
           />
         </div>
       </Card>
       <Pagination
-        total={10}
+        total={pagination.totalPages}
+        page={pagination.currentPage}
+        onChange={handlePageChange}
         color="pink"
         size="md"
-        style={{
-          marginTop: "20px",
-          marginLeft: "auto",
-        }}
+        style={{ marginTop: "20px", marginLeft: "auto" }}
       />
     </>
   );
 };
 
-export default Drafts;
+export default CampaignHistories;

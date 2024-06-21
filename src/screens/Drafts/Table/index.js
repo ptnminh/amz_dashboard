@@ -1,6 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 import styles from "./Table.module.sass";
 import Row from "./Row";
+import Checkbox from "../../../components/Checkbox";
+import { isEmpty } from "lodash";
 
 const Table = ({
   items,
@@ -8,12 +10,18 @@ const Table = ({
   selectedFilters,
   visibleModalDuplicate,
   setVisibleModalDuplicate,
+  handleSelectAllCampaigns,
 }) => {
   return (
     <div className={styles.wrapper}>
       <div className={styles.table}>
         <div className={styles.row}>
-          <div className={styles.col}></div>
+          <div className={styles.col}>
+            <Checkbox
+              onChange={() => handleSelectAllCampaigns(items)}
+              value={!isEmpty(selectedFilters)}
+            />
+          </div>
           <div className={styles.col}>Name</div>
           <div className={styles.col}>SKUs</div>
           <div className={styles.col}>KW/ASIN</div>

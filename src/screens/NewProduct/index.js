@@ -4,7 +4,6 @@ import CampaignInfo from "./CampaignInfo";
 import DefaultValue from "./Price";
 import cn from "classnames";
 import Card from "../../components/Card";
-import Editor from "../../components/Editor";
 import {
   CAMP_TYPES,
   CHANNELS,
