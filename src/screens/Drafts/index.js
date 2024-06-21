@@ -3,6 +3,7 @@ import cn from "classnames";
 import styles from "./Drafts.module.sass";
 import Card from "../../components/Card";
 import Form from "../../components/Form";
+import Schedule from "../../components/Schedule";
 
 import Table from "./Table";
 import { Box, LoadingOverlay, Pagination } from "@mantine/core";
@@ -11,11 +12,15 @@ import { isEmpty, map } from "lodash";
 import { campaignServices } from "../../services";
 import { useDisclosure } from "@mantine/hooks";
 import { showNotification } from "../../utils/index";
+import Modal from "../../components/Modal";
 
 const CampaignHistories = () => {
   const [search, setSearch] = useState("");
   const [visibleModalDuplicate, setVisibleModalDuplicate] = useState(false);
+  const [visibleModalSchedule, setVisibleModalSchedule] = useState(false);
   const [campaigns, setCampaigns] = useState([]);
+  const [startDate, setStartDate] = useState(new Date());
+  const [startTime, setStartTime] = useState(new Date());
   const [pagination, setPagination] = useState({
     currentPage: 1,
     totalPages: 1,
@@ -36,7 +41,6 @@ const CampaignHistories = () => {
         search,
         page,
       });
-      console.log(response);
       const { data, pagination } = response;
 
       if (data) {
@@ -104,18 +108,40 @@ const CampaignHistories = () => {
                 name="search"
                 icon="search"
               />
-              <button
-                className={cn(
-                  "button-stroke-purple button-small",
-                  styles.clearButton
-                )}
-                style={{ cursor: "pointer", marginLeft: "auto" }}
-                onClick={() => setVisibleModalDuplicate(true)}
-                disabled={isEmpty(selectedFilters)}
-              >
-                <Icon name="share" size="16" />
-                <span>Duplicate</span>
-              </button>
+              {!isEmpty(selectedFilters) && (
+                <>
+                  <div
+                    style={{
+                      marginLeft: "auto",
+                    }}
+                  >
+                    <button
+                      className={cn(
+                        "button-stroke-red button-small",
+                        styles.clearButton
+                      )}
+                      style={{ cursor: "pointer", marginLeft: "auto" }}
+                      onClick={() => setVisibleModalDuplicate(true)}
+                      disabled={isEmpty(selectedFilters)}
+                    >
+                      <Icon name="share" size="16" />
+                      <span>Duplicate</span>
+                    </button>
+                    <button
+                      className={cn(
+                        "button-stroke-purple button-small",
+                        styles.clearButton
+                      )}
+                      style={{ cursor: "pointer", marginLeft: "10px" }}
+                      onClick={() => setVisibleModalSchedule(true)}
+                      disabled={isEmpty(selectedFilters)}
+                    >
+                      <Icon name="schedule" size="16" />
+                      <span>Schedule</span>
+                    </button>
+                  </div>
+                </>
+              )}
             </>
           }
         >
@@ -139,6 +165,19 @@ const CampaignHistories = () => {
           size="md"
           style={{ marginTop: "20px", marginLeft: "auto" }}
         />
+        <Modal
+          visible={visibleModalSchedule}
+          onClose={() => setVisibleModalSchedule(false)}
+        >
+          <Schedule
+            startDate={startDate}
+            setStartDate={setStartDate}
+            startTime={startTime}
+            setStartTime={setStartTime}
+            title={"Schedule Campaign"}
+            note={"Chọn ngày và giờ trong tương lai muốn publish campaign"}
+          />
+        </Modal>
       </Box>
     </>
   );

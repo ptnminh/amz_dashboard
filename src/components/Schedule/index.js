@@ -12,6 +12,8 @@ const Schedule = ({
   setStartDate,
   startTime,
   setStartTime,
+  note,
+  title,
 }) => {
   const [visibleDate, setVisibleDate] = useState(false);
   const [visibleTime, setVisibleTime] = useState(false);
@@ -24,10 +26,12 @@ const Schedule = ({
 
   return (
     <div className={cn(styles.schedule, className)}>
-      <div className={cn("title-red", styles.title)}>Reschedule product</div>
+      <div className={cn("title-red", styles.title)}>
+        {title || "Reschedule product"}
+      </div>
       <div className={styles.note}>
-        Choose a day and time in the future you want your product to be
-        published.
+        {note ||
+          "Choose a day and time in the future you want your product to be published."}
       </div>
       <div className={styles.list}>
         <Item
@@ -95,7 +99,7 @@ const Schedule = ({
         </Item>
       </div>
       <div className={styles.btns}>
-        <button className={cn("button", styles.button)}>Reschedule</button>
+        <button className={cn("button", styles.button)}>Schedule</button>
       </div>
     </div>
   );
