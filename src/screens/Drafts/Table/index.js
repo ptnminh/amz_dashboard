@@ -2,13 +2,13 @@ import React, { useState } from "react";
 import styles from "./Table.module.sass";
 import Row from "./Row";
 
-const Table = ({ items, title }) => {
-  const [selectedFilters, setSelectedFilters] = useState([]);
-
-  const handleChange = (campaignName) => {
-    setSelectedFilters(campaignName);
-  };
-
+const Table = ({
+  items,
+  handleChangeCampaignName,
+  selectedFilters,
+  visibleModalDuplicate,
+  setVisibleModalDuplicate,
+}) => {
   return (
     <div className={styles.wrapper}>
       <div className={styles.table}>
@@ -28,7 +28,9 @@ const Table = ({ items, title }) => {
             key={index}
             index={index}
             value={selectedFilters.includes(x.campaignName)}
-            onChange={() => handleChange(x.campaignName)}
+            onChange={() => handleChangeCampaignName(x.campaignName)}
+            visibleModalDuplicate={visibleModalDuplicate}
+            setVisibleModalDuplicate={setVisibleModalDuplicate}
           />
         ))}
       </div>

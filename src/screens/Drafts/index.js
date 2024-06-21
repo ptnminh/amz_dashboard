@@ -7,12 +7,12 @@ import Form from "../../components/Form";
 import { campaigns } from "../../mocks/campaigns";
 import Table from "./Table";
 import { Pagination } from "@mantine/core";
-
-const sorting = ["list", "grid"];
+import Icon from "../../components/Icon";
+import { isEmpty } from "lodash";
 
 const Drafts = () => {
-  const [activeIndex, setActiveIndex] = useState(0);
   const [search, setSearch] = useState("");
+  const [visibleModalDuplicate, setVisibleModalDuplicate] = useState(false);
 
   const handleSubmit = (e) => {
     alert();
@@ -20,7 +20,7 @@ const Drafts = () => {
 
   const [selectedFilters, setSelectedFilters] = useState([]);
 
-  const handleChange = (id) => {
+  const handleChangeCampaignName = (id) => {
     if (selectedFilters.includes(id)) {
       setSelectedFilters(selectedFilters.filter((x) => x !== id));
     } else {
@@ -47,11 +47,30 @@ const Drafts = () => {
               name="search"
               icon="search"
             />
+            <button
+              className={cn(
+                "button-stroke-purple button-small",
+                styles.clearButton
+              )}
+              style={{ cursor: "pointer", marginLeft: "auto" }}
+              onClick={() => setVisibleModalDuplicate(true)}
+              disabled={isEmpty(selectedFilters)}
+            >
+              <Icon name="share" size="16" />
+              <span>Duplicate</span>
+            </button>
           </>
         }
       >
         <div className={styles.wrapper}>
-          <Table items={campaigns} title="Last edited" />
+          <Table
+            items={campaigns}
+            title="Last edited"
+            handleChangeCampaignName={handleChangeCampaignName}
+            selectedFilters={selectedFilters}
+            visibleModalDuplicate={visibleModalDuplicate}
+            setVisibleModalDuplicate={setVisibleModalDuplicate}
+          />
         </div>
       </Card>
       <Pagination

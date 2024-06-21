@@ -34,7 +34,7 @@ const Row = ({
           <div className={styles.lifetime}>
             <a
               data-tooltip-id="my-tooltip"
-              data-tooltip-content={item.asins || item.keywords}
+              data-tooltip-html={item.asins || item.keywords}
               data-tooltip-place="top"
             >
               <Icon name="info" size={12} />

@@ -22,7 +22,17 @@ import Checkbox from "../../components/Checkbox";
 import TextInput from "../../components/TextInput";
 import Icon from "../../components/Icon";
 import { useForm } from "react-hook-form";
-import { chunk, compact, first, isEmpty, join, map, split, trim } from "lodash";
+import {
+  chunk,
+  compact,
+  first,
+  isEmpty,
+  join,
+  map,
+  split,
+  trim,
+  uniq,
+} from "lodash";
 import moment from "moment-timezone";
 import Table from "./CampaignInfo/Table";
 import CryptoJS from "crypto-js";
@@ -80,7 +90,13 @@ const NewCampaigns = () => {
   const [reviewData, setReviewData] = useState([]);
   const [portfolios, setPortfolios] = useState([]);
   const [portfolioId, setPortfolioId] = useState();
+  const [keywordCount, setKeywordCount] = useState(0);
   const [createCampaignResult, setCreateCampaignResult] = useState("");
+  const handleKeywordBlur = () => {
+    const keywords = getValues("keywords");
+    const count = keywords?.split("\n").filter(Boolean).length;
+    setKeywordCount(count || 0);
+  };
   const {
     register,
     handleSubmit,
@@ -130,9 +146,11 @@ const NewCampaigns = () => {
       topOfSearch,
       portfolioId: inputPortfolioId,
     } = data;
-    const listSKUs = compact(map(split(trim(SKUs), "\n"), (SKU) => trim(SKU)));
-    const listKeywords = compact(
-      map(split(trim(keywords), "\n"), (keyword) => trim(keyword))
+    const listSKUs = uniq(
+      compact(map(split(trim(SKUs), "\n"), (SKU) => trim(SKU)))
+    );
+    const listKeywords = uniq(
+      compact(map(split(trim(keywords), "\n"), (keyword) => trim(keyword)))
     );
     let chunkedSKUs = [];
     let chunkedKeywords = [];
@@ -463,13 +481,15 @@ const NewCampaigns = () => {
                     className={styles.maximumCamp}
                     name="keywords"
                     type="text"
+                    onBlur={handleKeywordBlur}
                     isTextArea={true}
-                    placeholder={`B0C99KFYS6\nB09P48SXPN\nB0CBKT4SJ5\nB09CMDDTW3\nB08P7587QQ\nB0BWKBM2YN\nB09245S1RL\nB07QVJ4MLS\nB0BQYFTJCS`}
+                    placeholder={`B0C99KFYS6\nB09P48SXPN\nB0CBKT4SJ5\nB09CMDDTW3\nB08P7587QQ`}
                     register={register("keywords", {
                       required: campType !== "AUTO",
                     })}
                     error={errors.keywords}
                   />
+                  {keywordCount !== 0 && <p>Số lượng: {keywordCount}</p>}
                   {CREATE_KW_CAMP_METHOD.map((x, index) => (
                     <Checkbox
                       className={styles.checkbox}

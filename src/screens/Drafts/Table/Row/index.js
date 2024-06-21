@@ -4,23 +4,23 @@ import styles from "./Row.module.sass";
 import { Tooltip } from "react-tooltip";
 import Checkbox from "../../../../components/Checkbox";
 import Icon from "../../../../components/Icon";
-import Actions from "../../../../components/Actions";
 import Modal from "../../../../components/Modal";
 import Schedule from "../../Schedule";
 
-const Row = ({ item, value, onChange }) => {
+const Row = ({
+  item,
+  value,
+  onChange,
+  visibleModalDuplicate,
+  setVisibleModalDuplicate,
+}) => {
   const [startDate, setStartDate] = useState(new Date());
   const [startTime, setStartTime] = useState(new Date());
-
-  const [visibleModalSchedule, setVisibleModalSchedule] = useState(false);
 
   return (
     <>
       <div className={styles.row}>
-        <div
-          className={styles.col}
-          onClick={() => setVisibleModalSchedule(true)}
-        >
+        <div className={styles.col}>
           <Checkbox
             className={styles.checkbox}
             value={value}
@@ -58,8 +58,8 @@ const Row = ({ item, value, onChange }) => {
         </div>
       </div>
       <Modal
-        visible={visibleModalSchedule}
-        onClose={() => setVisibleModalSchedule(false)}
+        visible={visibleModalDuplicate}
+        onClose={() => setVisibleModalDuplicate(false)}
       >
         <Schedule
           startDate={startDate}
