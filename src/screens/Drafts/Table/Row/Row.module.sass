@@ -1,4 +1,4 @@
-@import ../../../styles/helpers
+@import ../../../../styles/helpers
 
 .row
     display: table-row
@@ -96,6 +96,8 @@
     white-space: nowrap
     overflow: hidden
     text-overflow: ellipsis
+    +dark
+        color: $n1
 .preview
     flex-shrink: 0
     width: 80px
@@ -160,6 +162,9 @@
         opacity: 1
     +t
         // display: none
+    +dark
+        color: $n4
+
 
 .actions
     display: none

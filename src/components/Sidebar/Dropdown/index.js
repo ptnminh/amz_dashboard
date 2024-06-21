@@ -66,10 +66,11 @@ const Dropdown = ({ className, item, visibleSidebar, setValue, onClose }) => {
         <Head />
       )}
       <div className={styles.body}>
-        {item.dropdown.map((x, index) => (
+        {item?.dropdown?.map((x, index) => (
           <NavLink
-            className={styles.link}
-            activeClassName={styles.active}
+            className={({ isActive }) =>
+              isActive ? `${styles.link} ${styles.active}` : styles.link
+            }
             to={x.url}
             key={index}
             onClick={onClose}

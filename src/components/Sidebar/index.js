@@ -20,47 +20,12 @@ const navigation = [
     icon: "diamond",
     add: true,
     dropdown: [
-      // {
-      //   title: "Dashboard",
-      //   url: "/campaigns/add",
-      // },
-      // {
-      //   title: "Drafts",
-      //   url: "/campaigns/drafts",
-      //   counter: "2",
-      //   colorCounter: "#FFBC99",
-      // },
-      // {
-      //   title: "Released",
-      //   url: "/campaigns/released",
-      // },
-      // {
-      //   title: "Comments",
-      //   url: "/campaigns/comments",
-      // },
-      // {
-      //   title: "Scheduled",
-      //   url: "/campaigns/scheduled",
-      //   counter: "8",
-      //   colorCounter: "#B5E4CA",
-      // },
+      {
+        title: "History",
+        url: "/campaigns/history",
+      },
     ],
   },
-  // {
-  //   title: "Customers",
-  //   slug: "customers",
-  //   icon: "profile-circle",
-  //   dropdown: [
-  //     {
-  //       title: "Overview",
-  //       url: "/customers/overview",
-  //     },
-  //     {
-  //       title: "Customer list",
-  //       url: "/customers/customer-list",
-  //     },
-  //   ],
-  // },
   // {
   //   title: "Shop",
   //   icon: "store",
@@ -88,11 +53,6 @@ const navigation = [
   //       url: "/income/statements",
   //     },
   //   ],
-  // },
-  // {
-  //   title: "Promote",
-  //   icon: "promotion",
-  //   url: "/promote",
   // },
 ];
 

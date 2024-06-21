@@ -27,10 +27,11 @@ import moment from "moment-timezone";
 import Table from "./CampaignInfo/Table";
 import CryptoJS from "crypto-js";
 import { useDisclosure } from "@mantine/hooks";
-import { Box, LoadingOverlay, JsonInput } from "@mantine/core";
+import { Box, LoadingOverlay } from "@mantine/core";
 import { showNotification } from "../../utils/index";
 import ProductLine from "./ProductLine";
 import { campaignServices, portfolioServices } from "../../services";
+import { Tooltip } from "react-tooltip";
 
 const generateRandomBytes = (length) => {
   return CryptoJS.lib.WordArray.random(length).toString();
@@ -57,10 +58,16 @@ const NewCampaigns = () => {
 
   const handleChangeForKW = (id) => {
     setSelectedCreateCampMethodForKW(id);
+    if (id !== 3) {
+      setValue("maximumKwPerCampaign", null);
+    }
   };
 
   const handleChangeForSKU = (id) => {
     setSelectedCreateCampMethodForSKU(id);
+    if (id !== 3) {
+      setValue("maximumSKUPerCampaign", null);
+    }
   };
 
   const [activeDefaultValueTab, setActiveDefaultValueTab] = useState(
@@ -212,6 +219,11 @@ const NewCampaigns = () => {
     }
     openLoadingCreateCamp();
     const preparedData = transformedData(data);
+    if (isEmpty(preparedData)) {
+      closeLoadingCreateCamp();
+      showNotification("Thất bại", "Vui lòng reload lại page & thử lại", "red");
+      return;
+    }
     const createCampaignsResult = await campaignServices.createCamps(
       preparedData
     );
@@ -231,8 +243,36 @@ const NewCampaigns = () => {
 
   const handlePreviewData = () => {
     const data = getValues();
+    console.log(data);
     if (!data.SKUs) {
       showNotification("Thất bại", "Vui lòng nhập SKUs hoặc Keywords", "red");
+      setReviewData([]);
+      return;
+    }
+    if (campType !== "AUTO" && isEmpty(data.keywords)) {
+      showNotification("Thất bại", "Vui lòng nhập KW/ASIN", "red");
+      setReviewData([]);
+      return;
+    }
+    if (
+      campType !== "AUTO" &&
+      selectedCreateCampMethodForKW === 3 &&
+      !data.maximumKwPerCampaign
+    ) {
+      showNotification(
+        "Thất bại",
+        "Vui lòng nhập Maximum KW/ASIN Per Campaign",
+        "red"
+      );
+      setReviewData([]);
+      return;
+    }
+    if (selectedCreateCampMethodForSKU === 3 && !data.maximumSKUPerCampaign) {
+      showNotification(
+        "Thất bại",
+        "Vui lòng nhập Maximum SKU Per Campaign",
+        "red"
+      );
       setReviewData([]);
       return;
     }
@@ -253,6 +293,9 @@ const NewCampaigns = () => {
     setVisiblePreviewData(false);
     setCreateCampaignResult("");
     setActiveDefaultValueTab(DEFAULT_VALUES_NAVIGATIONS[0]);
+    setCampType(CAMP_TYPES[0]);
+    setValue("maximumKwPerCampaign", null);
+    setValue("maximumSKUPerCampaign", null);
   };
 
   useEffect(() => {
@@ -343,24 +386,38 @@ const NewCampaigns = () => {
                 title="Product Line"
                 classTitle="title-orange"
                 head={
-                  <div className={cn(styles.nav, "tablet-hide")}>
-                    {PRODUCT_LINES_OPTIONS.map((x, index) => (
-                      <div
-                        className={cn(styles.link, {
-                          [styles.active]: x === activeProductLineTab,
-                        })}
-                        onClick={() => setActiveProductLineTab(x)}
-                        key={index}
-                        style={{ cursor: "pointer" }}
-                      >
-                        {x}
-                      </div>
-                    ))}
-                  </div>
+                  <>
+                    <div className={cn(styles.nav, "tablet-hide")}>
+                      {PRODUCT_LINES_OPTIONS.map((x, index) => (
+                        <div
+                          className={cn(styles.link, {
+                            [styles.active]: x === activeProductLineTab,
+                          })}
+                          onClick={() => setActiveProductLineTab(x)}
+                          key={index}
+                          style={{ cursor: "pointer" }}
+                        >
+                          {x}
+                        </div>
+                      ))}
+                    </div>
+                  </>
                 }
               >
                 {activeProductLineTab === "Default" && (
                   <>
+                    <a
+                      data-tooltip-id="my-tooltip"
+                      data-tooltip-html="Data được sync từ Google Sheet, ví dụ SKU: ONM-K12 thì sẽ lấy prefix là ONM để đi tìm bên Google Sheet <br>Trường hợp có nhiều Product Line được tìm thấy thì mặc định sẽ lấy Product Line đầu tiên</br>
+                      <br>Click để xem chi tiết</br>"
+                      data-tooltip-place="top"
+                      style={{ cursor: "pointer", marginRight: "12px" }}
+                      target="_blank"
+                      href="https://docs.google.com/spreadsheets/d/1F1CIRG4LzfBl2fKu9cNWa6wzGSTB93qTCPcozDb9aS0/edit?exids=71471476%2C71471470&gid=273441149#gid=273441149"
+                    >
+                      <Icon name="info" size={24} />
+                    </a>
+                    <Tooltip id="my-tooltip" />
                     <div
                       className={cn(
                         "button-stroke button-small",
@@ -384,7 +441,7 @@ const NewCampaigns = () => {
                       className={styles.maximumCamp}
                       name="portfolioId"
                       type="text"
-                      placeholder="Enter portfolioId"
+                      placeholder="Enter Portfolio ID"
                       register={register("portfolioId", { required: true })}
                       error={errors.portfolioId}
                     />
@@ -407,7 +464,7 @@ const NewCampaigns = () => {
                     name="keywords"
                     type="text"
                     isTextArea={true}
-                    placeholder="Enter Keywords/ASINs"
+                    placeholder={`B0C99KFYS6\nB09P48SXPN\nB0CBKT4SJ5\nB09CMDDTW3\nB08P7587QQ\nB0BWKBM2YN\nB09245S1RL\nB07QVJ4MLS\nB0BQYFTJCS`}
                     register={register("keywords", {
                       required: campType !== "AUTO",
                     })}

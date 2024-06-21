@@ -34,7 +34,7 @@ function App() {
         <Route
           path="/"
           element={
-            <Page title="Dashboard">
+            <Page title="Campaigns">
               <NewCampaigns />
             </Page>
           }
@@ -52,6 +52,14 @@ function App() {
           element={
             <Page title="Campaigns">
               <NewCampaigns />
+            </Page>
+          }
+        />
+        <Route
+          path="/campaigns/history"
+          element={
+            <Page title="Campaigns">
+              <Drafts />
             </Page>
           }
         />

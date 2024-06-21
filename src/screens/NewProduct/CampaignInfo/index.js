@@ -63,7 +63,7 @@ const CampaignInfo = ({
             name="SKUs"
             type="text"
             isTextArea={true}
-            placeholder="Enter SKUs"
+            placeholder={`GL-Q006 \nGL-MH002 \nGL-MH003 \nGL-MH001 \nGL-Q002 \nGL-Q003`}
             register={register("SKUs", { required: true })}
             error={errors.SKUs}
           />

@@ -23,7 +23,6 @@ const CampaignAuto = ({ setStrategy, strategy, isEdit, register, errors }) => {
           step="any"
           name="budget"
           type="number"
-          tooltip="Small description"
           required
           currency="$"
           disabled={!isEdit}
@@ -102,7 +101,6 @@ const CampaignKeywords = ({
           step="any"
           name="budget"
           type="number"
-          tooltip="Small description"
           required
           currency="$"
           disabled={!isEdit}
@@ -217,7 +215,6 @@ const CampaignASINs = ({
           step="any"
           name="budget"
           type="number"
-          tooltip="Small description"
           required
           currency="$"
           disabled={!isEdit}
