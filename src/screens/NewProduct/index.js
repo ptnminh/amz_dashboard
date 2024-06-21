@@ -92,6 +92,7 @@ const NewCampaigns = () => {
   const [portfolioId, setPortfolioId] = useState();
   const [keywordCount, setKeywordCount] = useState(0);
   const [createCampaignResult, setCreateCampaignResult] = useState("");
+  const [productLine, setProductLine] = useState("");
   const handleKeywordBlur = () => {
     const keywords = getValues("keywords");
     const count = keywords?.split("\n").filter(Boolean).length;
@@ -126,6 +127,35 @@ const NewCampaigns = () => {
       setPortfolioId(firstPortfolio.portfolioId);
     } else {
       showNotification("Thất bại", "Đồng bộ thất bại", "red");
+      setPortfolioId();
+      setPortfolios([]);
+    }
+    setProductLine("");
+    closeLoadingProductLine();
+    return;
+  };
+  const handleFindProductLine = async () => {
+    openLoadingProductLine();
+    if (isEmpty(productLine)) {
+      showNotification("Thất bại", "Giá trị Product Line không tồn tại", "red");
+      closeLoadingProductLine();
+      return;
+    }
+    const portfolios = await portfolioServices.findProductLine({
+      store,
+      productLine,
+    });
+    if (portfolios) {
+      showNotification("Thành công", "Tìm thấy giá trị Product Line", "green");
+      setPortfolios(portfolios);
+      const firstPortfolio = first(portfolios);
+      setPortfolioId(firstPortfolio.portfolioId);
+    } else {
+      showNotification(
+        "Thất bại",
+        "Không tìm thấy giá trị Product Line",
+        "red"
+      );
       setPortfolioId();
       setPortfolios([]);
     }
@@ -321,14 +351,14 @@ const NewCampaigns = () => {
       case "AUTO":
         if (activeDefaultValueTab === "Default") {
           setValue("defaultBid", 1.25);
-          setValue("budget", 10);
+          setValue("budget", 15);
           setValue("topOfSearch", 0);
         }
         break;
       case "KEYWORD":
         if (activeDefaultValueTab === "Default") {
           setValue("defaultBid", 1);
-          setValue("budget", 10);
+          setValue("budget", 15);
           setValue("topOfSearch", 0);
           setValue("bid", 1.25);
         }
@@ -464,6 +494,39 @@ const NewCampaigns = () => {
                       error={errors.portfolioId}
                     />
                   </div>
+                )}
+                {activeProductLineTab === "Product Line" && (
+                  <>
+                    <div className={styles.description}>
+                      <TextInput
+                        className={styles.maximumCamp}
+                        name="productLine"
+                        type="text"
+                        placeholder="Enter Product Line"
+                        value={productLine}
+                        onChange={(e) => setProductLine(e.target.value)}
+                      />
+                    </div>
+                    <div
+                      className={cn(
+                        "button-stroke button-small",
+                        styles.createButton
+                      )}
+                      type="button"
+                      style={{
+                        cursor: "pointer",
+                        marginTop: "24px",
+                        marginBottom: "24px",
+                      }}
+                      onClick={handleFindProductLine}
+                    >
+                      <Icon name="leaderboard" size="12" />
+                      <span>Find</span>
+                    </div>
+                    {!isEmpty(portfolios) && (
+                      <ProductLine data={portfolios} activeTable={true} />
+                    )}
+                  </>
                 )}
               </Card>
             </Box>

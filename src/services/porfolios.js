@@ -15,4 +15,20 @@ export const portfolioServices = {
       return false;
     }
   },
+  findProductLine: async ({ store, productLine }) => {
+    try {
+      const response = await axios.post(
+        `${hostAPI}/api/portfolios/find-product-line`,
+        {
+          store,
+          productLine,
+        }
+      );
+      const { data: result } = response;
+      return isEmpty(result?.data) ? false : result?.data;
+    } catch (error) {
+      console.log("Error at findProductLine:", error);
+      return false;
+    }
+  },
 };
