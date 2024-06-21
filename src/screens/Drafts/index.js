@@ -5,7 +5,7 @@ import Card from "../../components/Card";
 import Form from "../../components/Form";
 
 import Table from "./Table";
-import { Pagination } from "@mantine/core";
+import { Box, LoadingOverlay, Pagination } from "@mantine/core";
 import Icon from "../../components/Icon";
 import { isEmpty, map } from "lodash";
 import { campaignServices } from "../../services";
@@ -81,58 +81,65 @@ const CampaignHistories = () => {
 
   return (
     <>
-      <Card
-        className={styles.card}
-        classCardHead={styles.head}
-        title="Campaigns History"
-        classTitle={cn("title-purple", styles.title)}
-        head={
-          <>
-            <Form
-              className={styles.form}
-              value={search}
-              setValue={setSearch}
-              onSubmit={handleSubmit}
-              placeholder="Search Campaign"
-              type="text"
-              name="search"
-              icon="search"
+      <Box pos="relative">
+        <LoadingOverlay
+          visible={visibleLoadingCampaignHistories}
+          zIndex={1000}
+          overlayProps={{ radius: "sm", blur: 2 }}
+        />
+        <Card
+          className={styles.card}
+          classCardHead={styles.head}
+          title="Campaigns History"
+          classTitle={cn("title-purple", styles.title)}
+          head={
+            <>
+              <Form
+                className={styles.form}
+                value={search}
+                setValue={setSearch}
+                onSubmit={handleSubmit}
+                placeholder="Search Campaign"
+                type="text"
+                name="search"
+                icon="search"
+              />
+              <button
+                className={cn(
+                  "button-stroke-purple button-small",
+                  styles.clearButton
+                )}
+                style={{ cursor: "pointer", marginLeft: "auto" }}
+                onClick={() => setVisibleModalDuplicate(true)}
+                disabled={isEmpty(selectedFilters)}
+              >
+                <Icon name="share" size="16" />
+                <span>Duplicate</span>
+              </button>
+            </>
+          }
+        >
+          <div className={styles.wrapper}>
+            <Table
+              items={campaigns}
+              title="Last edited"
+              handleChangeCampaignName={handleChangeCampaignName}
+              selectedFilters={selectedFilters}
+              visibleModalDuplicate={visibleModalDuplicate}
+              setVisibleModalDuplicate={setVisibleModalDuplicate}
+              handleSelectAllCampaigns={handleSelectAllCampaigns}
             />
-            <button
-              className={cn(
-                "button-stroke-purple button-small",
-                styles.clearButton
-              )}
-              style={{ cursor: "pointer", marginLeft: "auto" }}
-              onClick={() => setVisibleModalDuplicate(true)}
-              disabled={isEmpty(selectedFilters)}
-            >
-              <Icon name="share" size="16" />
-              <span>Duplicate</span>
-            </button>
-          </>
-        }
-      >
-        <div className={styles.wrapper}>
-          <Table
-            items={campaigns}
-            title="Last edited"
-            handleChangeCampaignName={handleChangeCampaignName}
-            selectedFilters={selectedFilters}
-            visibleModalDuplicate={visibleModalDuplicate}
-            setVisibleModalDuplicate={setVisibleModalDuplicate}
-            handleSelectAllCampaigns={handleSelectAllCampaigns}
-          />
-        </div>
-      </Card>
-      <Pagination
-        total={pagination.totalPages}
-        page={pagination.currentPage}
-        onChange={handlePageChange}
-        color="pink"
-        size="md"
-        style={{ marginTop: "20px", marginLeft: "auto" }}
-      />
+          </div>
+        </Card>
+        <Pagination
+          total={pagination.totalPages}
+          page={pagination.currentPage}
+          onChange={handlePageChange}
+          color="pink"
+          size="md"
+          style={{ marginTop: "20px", marginLeft: "auto" }}
+        />
+      </Box>
     </>
   );
 };
