@@ -120,7 +120,8 @@ const CampaignHistories = () => {
           "Duplicate Campaigns thành công",
           "blue"
         );
-        fetchCampaigns(pagination.currentPage);
+        setSearch("");
+        fetchCampaigns(1);
         setSelectedFilters([]);
         setVisibleCampaignResult(true);
         setDuplicateCampaignResult(response.data);
