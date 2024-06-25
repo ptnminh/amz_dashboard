@@ -365,7 +365,7 @@ const NewCampaigns = () => {
         break;
       case "KEYWORD":
         if (activeDefaultValueTab === "Default") {
-          setValue("defaultBid", 1);
+          setValue("defaultBid", 1.25);
           setValue("budget", 15);
           setValue("topOfSearch", 0);
           setValue("bid", 1.25);
@@ -375,10 +375,10 @@ const NewCampaigns = () => {
         break;
       case "ASIN":
         if (activeDefaultValueTab === "Default") {
-          setValue("defaultBid", 1);
+          setValue("defaultBid", 1.25);
           setValue("budget", 15);
           setValue("topOfSearch", 0);
-          setValue("bid", 1);
+          setValue("bid", 1.25);
           setCampTypePlaceHolder(
             `B0C99KFYS6\nB09P48SXPN\nB0CBKT4SJ5\nB09CMDDTW3\nB08P7587QQ`
           );

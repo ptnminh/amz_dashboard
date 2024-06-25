@@ -12,73 +12,78 @@ import {
 } from "../../../constant";
 
 const CampaignAuto = ({ setStrategy, strategy, isEdit, register, errors }) => {
-  return (
-    <div className={cn(styles.price)}>
-      <div className={styles.fieldset}>
-        <TextInput
-          className={styles.field}
-          classLabel={styles.label}
-          classInput={styles.classInput}
-          label="Daily Budget"
-          step="any"
-          name="budget"
-          type="number"
-          required
-          currency="$"
-          disabled={!isEdit}
-          error={errors.budget}
-          register={register("budget", { required: true, valueAsNumber: true })}
-        />
-        <TextInput
-          className={styles.field}
-          classLabel={styles.label}
-          classInput={styles.classInput}
-          label="AdGroup Default Bid"
-          name="defaultBid"
-          step="any"
-          type="number"
-          required
-          disabled={!isEdit}
-          register={register("defaultBid", {
-            required: true,
-            valueAsNumber: true,
-          })}
-          error={errors.defaultBid}
-        />
-      </div>
+  return isEdit ? (
+    <>
+      <div className={cn(styles.price)}>
+        <div className={styles.fieldset}>
+          <TextInput
+            className={styles.field}
+            classLabel={styles.label}
+            classInput={styles.classInput}
+            label="Daily Budget"
+            step="any"
+            name="budget"
+            type="number"
+            required
+            currency="$"
+            disabled={!isEdit}
+            error={errors.budget}
+            register={register("budget", {
+              required: true,
+              valueAsNumber: true,
+            })}
+          />
+          <TextInput
+            className={styles.field}
+            classLabel={styles.label}
+            classInput={styles.classInput}
+            label="AdGroup Default Bid"
+            name="defaultBid"
+            step="any"
+            type="number"
+            required
+            disabled={!isEdit}
+            register={register("defaultBid", {
+              required: true,
+              valueAsNumber: true,
+            })}
+            error={errors.defaultBid}
+          />
+        </div>
 
-      <div className={styles.fieldset}>
-        <TextInput
-          className={styles.field}
-          classLabel={styles.label}
-          classInput={styles.classInput}
-          label="Top Of Search"
-          name="topOfSearch"
-          step="any"
-          type="number"
-          required
-          currency="%"
-          disabled={!isEdit}
-          register={register("topOfSearch", {
-            required: true,
-            valueAsNumber: true,
-          })}
-          error={errors.topOfSearch}
-        />
-        <Dropdown
-          className={styles.dropdown}
-          classDropdownLabel={styles.label}
-          classDropdownHead={styles.classDropdownHead}
-          value={strategy}
-          setValue={setStrategy}
-          options={STRATEGIES}
-          label={"Strategy"}
-          classOutsideClick={styles.outsideClick}
-          disabled={!isEdit}
-        />{" "}
-      </div>
-    </div>
-  );
+        <div className={styles.fieldset}>
+          <TextInput
+            className={styles.field}
+            classLabel={styles.label}
+            classInput={styles.classInput}
+            label="Top Of Search"
+            name="topOfSearch"
+            step="any"
+            type="number"
+            required
+            currency="%"
+            disabled={!isEdit}
+            register={register("topOfSearch", {
+              required: true,
+              valueAsNumber: true,
+            })}
+            error={errors.topOfSearch}
+          />
+          <Dropdown
+            className={styles.dropdown}
+            classDropdownLabel={styles.label}
+            classDropdownHead={styles.classDropdownHead}
+            value={strategy}
+            setValue={setStrategy}
+            options={STRATEGIES}
+            label={"Strategy"}
+            classOutsideClick={styles.outsideClick}
+            disabled={!isEdit}
+          />{" "}
+        </div>
+      </div>{" "}
+    </>
+  ) : null;
 };
 
 const CampaignKeywords = ({
@@ -92,71 +97,79 @@ const CampaignKeywords = ({
 }) => {
   return (
     <div className={cn(styles.price)}>
-      <div className={styles.fieldset}>
-        <TextInput
-          className={styles.field}
-          classLabel={styles.label}
-          classInput={styles.classInput}
-          label="Daily Budget"
-          step="any"
-          name="budget"
-          type="number"
-          required
-          currency="$"
-          disabled={!isEdit}
-          register={register("budget", { required: true, valueAsNumber: true })}
-          error={errors.budget}
-        />
-        <TextInput
-          className={styles.field}
-          classLabel={styles.label}
-          classInput={styles.classInput}
-          label="AdGroup Default Bid"
-          name="defaultBid"
-          step="any"
-          type="number"
-          required
-          disabled={!isEdit}
-          register={register("defaultBid", {
-            required: true,
-            valueAsNumber: true,
-          })}
-          error={errors.defaultBid}
-        />
-      </div>
+      {isEdit && (
+        <div className={styles.fieldset}>
+          <TextInput
+            className={styles.field}
+            classLabel={styles.label}
+            classInput={styles.classInput}
+            label="Daily Budget"
+            step="any"
+            name="budget"
+            type="number"
+            required
+            currency="$"
+            disabled={!isEdit}
+            register={register("budget", {
+              required: true,
+              valueAsNumber: true,
+            })}
+            error={errors.budget}
+          />
+          <TextInput
+            className={styles.field}
+            classLabel={styles.label}
+            classInput={styles.classInput}
+            label="AdGroup Default Bid"
+            name="defaultBid"
+            step="any"
+            type="number"
+            required
+            disabled={!isEdit}
+            register={register("defaultBid", {
+              required: true,
+              valueAsNumber: true,
+            })}
+            error={errors.defaultBid}
+          />
+        </div>
+      )}
 
-      <div className={styles.fieldset}>
-        <TextInput
-          className={styles.field}
-          classLabel={styles.label}
-          classInput={styles.classInput}
-          label="Bid"
-          step="any"
-          name="bid"
-          type="number"
-          required
-          disabled={!isEdit}
-          register={register("bid", { required: true, valueAsNumber: true })}
-          error={errors.bid}
-        />
-        <TextInput
-          className={styles.field}
-          classLabel={styles.label}
-          classInput={styles.classInput}
-          label="Top Of Search"
-          name="topOfSearch"
-          step="any"
-          type="number"
-          required
-          currency="%"
-          disabled={!isEdit}
-          register={register("topOfSearch", {
-            required: true,
-            valueAsNumber: true,
-          })}
-          error={errors.topOfSearch}
-        />
-      </div>
+      {isEdit && (
+        <div className={styles.fieldset}>
+          <TextInput
+            className={styles.field}
+            classLabel={styles.label}
+            classInput={styles.classInput}
+            label="Bid"
+            step="any"
+            name="bid"
+            type="number"
+            required
+            disabled={!isEdit}
+            register={register("bid", { required: true, valueAsNumber: true })}
+            error={errors.bid}
+          />
+          <TextInput
+            className={styles.field}
+            classLabel={styles.label}
+            classInput={styles.classInput}
+            label="Top Of Search"
+            name="topOfSearch"
+            step="any"
+            type="number"
+            required
+            currency="%"
+            disabled={!isEdit}
+            register={register("topOfSearch", {
+              required: true,
+              valueAsNumber: true,
+            })}
+            error={errors.topOfSearch}
+          />
+        </div>
+      )}
+
       <div
         style={{
           marginBottom: "10px",
@@ -204,71 +217,78 @@ const CampaignASINs = ({
 }) => {
   return (
     <div className={cn(styles.price)}>
-      <div className={styles.fieldset}>
-        <TextInput
-          className={styles.field}
-          classLabel={styles.label}
-          classInput={styles.classInput}
-          label="Daily Budget"
-          step="any"
-          name="budget"
-          type="number"
-          required
-          currency="$"
-          disabled={!isEdit}
-          register={register("budget", { required: true, valueAsNumber: true })}
-          error={errors.budget}
-        />
-        <TextInput
-          className={styles.field}
-          classLabel={styles.label}
-          classInput={styles.classInput}
-          label="AdGroup Default Bid"
-          name="defaultBid"
-          step="any"
-          type="number"
-          required
-          disabled={!isEdit}
-          register={register("defaultBid", {
-            required: true,
-            valueAsNumber: true,
-          })}
-          error={errors.defaultBid}
-        />
-      </div>
+      {isEdit && (
+        <div className={styles.fieldset}>
+          <TextInput
+            className={styles.field}
+            classLabel={styles.label}
+            classInput={styles.classInput}
+            label="Daily Budget"
+            step="any"
+            name="budget"
+            type="number"
+            required
+            currency="$"
+            disabled={!isEdit}
+            register={register("budget", {
+              required: true,
+              valueAsNumber: true,
+            })}
+            error={errors.budget}
+          />
+          <TextInput
+            className={styles.field}
+            classLabel={styles.label}
+            classInput={styles.classInput}
+            label="AdGroup Default Bid"
+            name="defaultBid"
+            step="any"
+            type="number"
+            required
+            disabled={!isEdit}
+            register={register("defaultBid", {
+              required: true,
+              valueAsNumber: true,
+            })}
+            error={errors.defaultBid}
+          />
+        </div>
+      )}
+      {isEdit && (
+        <div className={styles.fieldset}>
+          <TextInput
+            className={styles.field}
+            classLabel={styles.label}
+            classInput={styles.classInput}
+            label="Bid"
+            step="any"
+            name="bid"
+            type="number"
+            required
+            disabled={!isEdit}
+            register={register("bid", { required: true, valueAsNumber: true })}
+            error={errors.bid}
+          />
+          <TextInput
+            className={styles.field}
+            classLabel={styles.label}
+            classInput={styles.classInput}
+            label="Top Of Search"
+            name="topOfSearch"
+            step="any"
+            type="number"
+            required
+            currency="%"
+            disabled={!isEdit}
+            register={register("topOfSearch", {
+              required: true,
+              valueAsNumber: true,
+            })}
+            error={errors.topOfSearch}
+          />
+        </div>
+      )}
 
-      <div className={styles.fieldset}>
-        <TextInput
-          className={styles.field}
-          classLabel={styles.label}
-          classInput={styles.classInput}
-          label="Bid"
-          step="any"
-          name="bid"
-          type="number"
-          required
-          disabled={!isEdit}
-          register={register("bid", { required: true, valueAsNumber: true })}
-          error={errors.bid}
-        />
-        <TextInput
-          className={styles.field}
-          classLabel={styles.label}
-          classInput={styles.classInput}
-          label="Top Of Search"
-          name="topOfSearch"
-          step="any"
-          type="number"
-          required
-          currency="%"
-          disabled={!isEdit}
-          register={register("topOfSearch", {
-            required: true,
-            valueAsNumber: true,
-          })}
-          error={errors.topOfSearch}
-        />
-      </div>
       <div
         style={{
           marginBottom: "10px",
