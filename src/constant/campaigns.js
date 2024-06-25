@@ -67,7 +67,7 @@ export const CREATE_KW_CAMP_METHOD = [
     title: "Tối đa N KW/ASIN",
   },
 ];
-export const PRODUCT_LINES_OPTIONS = ["Default", "New", "Product Line"];
+export const PRODUCT_LINES_OPTIONS = ["Default", "Product Line"];
 export const STORE_PREFIX_BRAND = {
   KH: {
     store: "Kool House",
