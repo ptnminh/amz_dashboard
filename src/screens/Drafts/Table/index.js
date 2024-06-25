@@ -11,6 +11,8 @@ const Table = ({
   visibleModalDuplicate,
   setVisibleModalDuplicate,
   handleSelectAllCampaigns,
+  stores,
+  setStores,
 }) => {
   return (
     <div className={styles.wrapper}>
@@ -39,6 +41,8 @@ const Table = ({
             onChange={() => handleChangeCampaignName(x.campaignName)}
             visibleModalDuplicate={visibleModalDuplicate}
             setVisibleModalDuplicate={setVisibleModalDuplicate}
+            stores={stores}
+            setStores={setStores}
           />
         ))}
       </div>

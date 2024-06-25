@@ -14,14 +14,14 @@ const Page = ({ wide, children, title }) => {
           className={cn(styles.sidebar, { [styles.visible]: visible })}
           onClose={() => setVisible(false)}
         />
-        <Header onOpen={() => setVisible(true)} />
+        {/* <Header onOpen={() => setVisible(true)} /> */}
         <div className={styles.inner}>
           <div
             className={cn(styles.container, {
               [styles.wide]: wide,
             })}
           >
-            {title && <div className={cn("h3", styles.title)}>{title}</div>}
+            {/* {title && <div className={cn("h3", styles.title)}>{title}</div>} */}
             {children}
           </div>
         </div>

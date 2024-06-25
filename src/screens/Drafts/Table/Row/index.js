@@ -1,22 +1,10 @@
-import React, { useState } from "react";
+import React from "react";
 import styles from "./Row.module.sass";
 
 import { Tooltip } from "react-tooltip";
 import Checkbox from "../../../../components/Checkbox";
 import Icon from "../../../../components/Icon";
-import Modal from "../../../../components/Modal";
-import Schedule from "../../Schedule";
-
-const Row = ({
-  item,
-  value,
-  onChange,
-  visibleModalDuplicate,
-  setVisibleModalDuplicate,
-}) => {
-  const [startDate, setStartDate] = useState(new Date());
-  const [startTime, setStartTime] = useState(new Date());
-
+const Row = ({ item, value, onChange }) => {
   return (
     <>
       <div className={styles.row}>
@@ -57,17 +45,6 @@ const Row = ({
           <div className={styles.control}>{item.store}</div>
         </div>
       </div>
-      <Modal
-        visible={visibleModalDuplicate}
-        onClose={() => setVisibleModalDuplicate(false)}
-      >
-        <Schedule
-          startDate={startDate}
-          setStartDate={setStartDate}
-          startTime={startTime}
-          setStartTime={setStartTime}
-        />
-      </Modal>
     </>
   );
 };

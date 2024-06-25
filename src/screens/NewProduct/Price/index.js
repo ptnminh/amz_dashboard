@@ -159,7 +159,7 @@ const CampaignKeywords = ({
       </div>
       <div
         style={{
-          marginBottom: "20px",
+          marginBottom: "10px",
         }}
       >
         <Dropdown
@@ -175,7 +175,7 @@ const CampaignKeywords = ({
       </div>
       <div
         style={{
-          marginBottom: "20px",
+          marginBottom: "10px",
         }}
       >
         <Dropdown
@@ -199,8 +199,6 @@ const CampaignASINs = ({
   expressionType,
   setExpressionType,
   isEdit,
-  setTopOfSearch,
-  topOfSearch,
   register,
   errors,
 }) => {
@@ -264,8 +262,6 @@ const CampaignASINs = ({
           required
           currency="%"
           disabled={!isEdit}
-          value={topOfSearch}
-          onChange={(e) => setTopOfSearch(e.target.value)}
           register={register("topOfSearch", {
             required: true,
             valueAsNumber: true,
@@ -275,7 +271,7 @@ const CampaignASINs = ({
       </div>
       <div
         style={{
-          marginBottom: "20px",
+          marginBottom: "10px",
         }}
       >
         <Dropdown
@@ -291,7 +287,7 @@ const CampaignASINs = ({
       </div>
       <div
         style={{
-          marginBottom: "20px",
+          marginBottom: "10px",
         }}
       >
         <Dropdown
@@ -326,8 +322,8 @@ const DefaultValue = ({
   return (
     <Card
       className={cn(styles.card, className)}
-      title="Default Value"
-      classTitle="title-yellow"
+      title="7. Bid/Bud"
+      classTitle="title-orange"
       head={
         <div className={cn(styles.nav, "tablet-hide")}>
           {DEFAULT_VALUES_NAVIGATIONS.map((x, index) => (

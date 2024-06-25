@@ -1,9 +1,9 @@
 @import ../../styles/helpers
 
 .page
-    padding: 96px 0 0 340px
+    padding: 0 0 0 280px
     +x
-        padding: 80px 0 0 300px
+        padding: 0 0 0 280px
     +d
         padding-left: 96px
     +t
@@ -22,18 +22,19 @@
     display: flex
     flex-direction: column
     min-height: calc(100vh - 96px)
-    padding: 40px
+    padding: 5px
     +x
-        padding: 32px 24px
+        // padding: 32px 24px
     +m
-        padding: 24px 16px
+        // padding: 24px 16px
 
 .container
     display: flex
     flex-direction: column
     flex-grow: 1
     width: 100%
-    max-width: 1200px
+    // max-width: 1600px
+    min-width: 90%
     margin: 0 auto
     &.wide
         max-width: 100%

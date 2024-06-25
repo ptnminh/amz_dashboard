@@ -1,45 +1,37 @@
-import React, { useState } from "react";
+import React from "react";
 import styles from "./Schedule.module.sass";
 import cn from "classnames";
-import Item from "./Item";
-import DatePicker from "react-datepicker";
-import { format } from "date-fns";
-import Icon from "../../../components/Icon";
-import Dropdown from "../../../components/Dropdown";
 import { STORES } from "../../../constant";
+import MultiSelect from "../../../components/Multiselect";
+import { isEmpty } from "lodash";
 
 const Schedule = ({
   className,
-  startDate,
-  setStartDate,
-  startTime,
-  setStartTime,
+  stores,
+  setStores,
+  onConfirm,
+  setVisibleModalDuplicate,
 }) => {
-  const [visibleDate, setVisibleDate] = useState(false);
-  const [visibleTime, setVisibleTime] = useState(false);
-
-  const handleClick = () => {
-    setStartDate(null);
-    setTimeout(() => setStartDate(new Date()), 10);
-    setVisibleDate(false);
-  };
-  const [store, setStore] = useState(STORES[0]);
-
   return (
     <div className={cn(styles.schedule, className)}>
       <div className={cn("title-red", styles.title)}>Duplicate Campaign</div>
       <div className={styles.note}>Choose a store for duplicate Campaign</div>
       <div className={styles.list}>
-        <Dropdown
-          className={styles.dropdown}
-          classDropdownHead={styles.dropdownHead}
-          value={store}
-          setValue={setStore}
+        <MultiSelect
+          values={stores}
+          setValues={setStores}
           options={STORES}
-          label={"Store"}
-        />{" "}
+          label="Select Stores"
+        />
       </div>
-      <div className={styles.btns}>
+      <div
+        className={styles.btns}
+        onClick={() => {
+          if (isEmpty(stores)) return;
+          setVisibleModalDuplicate(false);
+          onConfirm();
+        }}
+      >
         <button className={cn("button", styles.button)}>Duplicate</button>
       </div>
     </div>

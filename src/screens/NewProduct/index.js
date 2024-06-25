@@ -16,6 +16,7 @@ import {
   CREATE_KW_CAMP_METHOD,
   STORE_PREFIX_BRAND,
   MAPPED_STRATEGY,
+  CAMPAIGN_TYPES_OPTIONS,
 } from "../../constant";
 import Checkbox from "../../components/Checkbox";
 import TextInput from "../../components/TextInput";
@@ -64,7 +65,11 @@ const NewCampaigns = () => {
   const [campType, setCampType] = useState(CAMP_TYPES[0]);
   const [selectedCreateCampMethodForKW, setSelectedCreateCampMethodForKW] =
     useState(1);
+  const [visibleCreateCampResult, setVisibleCreateCampResult] = useState(false);
 
+  const [campTypePlaceHolder, setCampTypePlaceHolder] = useState(
+    `father gifts\ngifts\nmother gifts`
+  );
   const handleChangeForKW = (id) => {
     setSelectedCreateCampMethodForKW(id);
     if (id !== 3) {
@@ -91,6 +96,9 @@ const NewCampaigns = () => {
   const [portfolioId, setPortfolioId] = useState();
   const [keywordCount, setKeywordCount] = useState(0);
   const [createCampaignResult, setCreateCampaignResult] = useState("");
+  const [campTypeTitle, setCampTypeTitle] = useState(
+    CAMPAIGN_TYPES_OPTIONS[0].title
+  );
   const [productLine, setProductLine] = useState("");
   const handleKeywordBlur = () => {
     const keywords = getValues("keywords");
@@ -285,6 +293,7 @@ const NewCampaigns = () => {
     setPortfolios([]);
     setReviewData([]);
     closeLoadingCreateCamp();
+    visibleCreateCampResult(true);
     return true;
   };
 
@@ -360,6 +369,8 @@ const NewCampaigns = () => {
           setValue("budget", 15);
           setValue("topOfSearch", 0);
           setValue("bid", 1.25);
+          setCampTypePlaceHolder(`father gifts\ngifts\nmother gifts`);
+          setCampTypeTitle("KW");
         }
         break;
       case "ASIN":
@@ -368,12 +379,20 @@ const NewCampaigns = () => {
           setValue("budget", 15);
           setValue("topOfSearch", 0);
           setValue("bid", 1);
+          setCampTypePlaceHolder(
+            `B0C99KFYS6\nB09P48SXPN\nB0CBKT4SJ5\nB09CMDDTW3\nB08P7587QQ`
+          );
+          setCampTypeTitle("ASIN");
         }
         break;
       default:
         break;
     }
   }, [campType, activeDefaultValueTab]);
+
+  useEffect(() => {
+    setValue("extendPrefix", "Gr");
+  }, []);
 
   return (
     <>
@@ -404,21 +423,38 @@ const NewCampaigns = () => {
               handleResetData={handleResetData}
               previewData={reviewData}
               handlePreviewData={handlePreviewData}
+              setFormValue={setValue}
             />
-            <Card
-              className={cn(styles.card)}
-              title="Kết quả"
-              classTitle="title-red"
-            >
-              <TextInput
-                className={styles.maximumCamp}
-                name="createCampaignResult"
-                type="text"
-                label={"Chi tiết kết quả"}
-                isTextArea={true}
-                value={createCampaignResult}
-              />
-            </Card>
+            {createCampaignResult && visibleCreateCampResult && (
+              <Card
+                className={cn(styles.card)}
+                title="Kết quả"
+                classTitle="title-red"
+                classCardHead={styles.classCardHead}
+                head={
+                  <div className={cn(styles.nav, "tablet-hide")}>
+                    <div
+                      className={cn(styles.link, {
+                        [styles.active]: visibleCreateCampResult,
+                      })}
+                      onClick={() => setVisibleCreateCampResult(false)}
+                      style={{ cursor: "pointer" }}
+                    >
+                      Hide
+                    </div>
+                  </div>
+                }
+              >
+                <TextInput
+                  className={styles.maximumCamp}
+                  name="createCampaignResult"
+                  type="text"
+                  label={"Chi tiết kết quả"}
+                  isTextArea={true}
+                  value={createCampaignResult}
+                />
+              </Card>
+            )}
           </div>
           <div className={styles.col}>
             <Box pos="relative">
@@ -430,8 +466,9 @@ const NewCampaigns = () => {
               />
               <Card
                 className={cn(styles.card)}
-                title="Product Line"
+                title="3. Product Line"
                 classTitle="title-orange"
+                classCardHead={styles.classCardHead}
                 head={
                   <>
                     <div className={cn(styles.nav, "tablet-hide")}>
@@ -529,55 +566,99 @@ const NewCampaigns = () => {
                 )}
               </Card>
             </Box>
-            <Card
-              className={cn(styles.card)}
-              title="KW/ASIN"
-              classTitle="title-green"
-            >
-              <div className={styles.description}>
-                <div
-                  className={styles.group}
-                  style={{ width: "100%", marginBottom: 24 }}
-                >
-                  <TextInput
-                    className={styles.maximumCamp}
-                    name="keywords"
-                    type="text"
-                    onBlur={handleKeywordBlur}
-                    isTextArea={true}
-                    placeholder={`B0C99KFYS6\nB09P48SXPN\nB0CBKT4SJ5\nB09CMDDTW3\nB08P7587QQ`}
-                    register={register("keywords", {
-                      required: campType !== "AUTO",
-                    })}
-                    error={errors.keywords}
-                  />
-                  {keywordCount !== 0 && <p>Số lượng: {keywordCount}</p>}
-                  {CREATE_KW_CAMP_METHOD.map((x, index) => (
-                    <Checkbox
-                      className={styles.checkbox}
-                      content={x.title}
-                      value={selectedCreateCampMethodForKW === x.id}
-                      onChange={() => handleChangeForKW(x.id)}
-                      key={index}
-                    />
-                  ))}
-                  {selectedCreateCampMethodForKW === 3 && (
+            {campType !== "AUTO" && (
+              <Card
+                className={cn(styles.card)}
+                title="5. KW/ASIN"
+                classTitle="title-orange"
+                classCardHead={styles.classCardHead}
+                head={
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "flex-end",
+                      gap: "15px",
+                    }}
+                  >
+                    {CAMPAIGN_TYPES_OPTIONS.map((x, index) => (
+                      <Checkbox
+                        className={styles.checkboxChannel}
+                        content={x.title}
+                        value={campTypeTitle === x.title}
+                        onChange={() => {
+                          if (x.title === "KW") {
+                            setCampTypePlaceHolder(
+                              `father gifts\ngifts\nmother gifts`
+                            );
+                          } else {
+                            setCampTypePlaceHolder(
+                              `B0C99KFYS6\nB09P48SXPN\nB0CBKT4SJ5\nB09CMDDTW3\nB08P7587QQ`
+                            );
+                          }
+                          setCampTypeTitle(x.title);
+                        }}
+                        key={index}
+                      />
+                    ))}
+                  </div>
+                }
+              >
+                <div className={styles.description}>
+                  <div
+                    className={styles.group}
+                    style={{ width: "100%", marginBottom: 24 }}
+                  >
                     <TextInput
                       className={styles.maximumCamp}
-                      name="maximumKwPerCampaign"
-                      type="number"
-                      placeholder="3"
-                      tooltip="BT-P005_Gr_1kw"
-                      register={register("maximumKwPerCampaign", {
-                        required: true,
-                        valueAsNumber: true,
+                      name="keywords"
+                      type="text"
+                      onBlur={handleKeywordBlur}
+                      isTextArea={true}
+                      placeholder={campTypePlaceHolder}
+                      register={register("keywords", {
+                        required: campType !== "AUTO",
                       })}
-                      error={errors.maximumKwPerCampaign}
+                      error={errors.keywords}
                     />
-                  )}
+                    {keywordCount !== 0 && <p>Số lượng: {keywordCount}</p>}
+                    <div
+                      style={{
+                        display: "flex",
+                        minWidth: "100%",
+                        marginLeft: 6,
+                      }}
+                    >
+                      {CREATE_KW_CAMP_METHOD.map((x, index) => (
+                        <Checkbox
+                          className={styles.checkbox}
+                          content={x.title}
+                          value={selectedCreateCampMethodForKW === x.id}
+                          onChange={() => handleChangeForKW(x.id)}
+                          key={index}
+                        />
+                      ))}
+                    </div>
+
+                    {selectedCreateCampMethodForKW === 3 && (
+                      <TextInput
+                        className={styles.maximumCamp}
+                        name="maximumKwPerCampaign"
+                        type="number"
+                        placeholder="3"
+                        tooltip="BT-P005_Gr_1kw"
+                        register={register("maximumKwPerCampaign", {
+                          required: true,
+                          valueAsNumber: true,
+                        })}
+                        error={errors.maximumKwPerCampaign}
+                      />
+                    )}
+                  </div>
                 </div>
-              </div>
-            </Card>
+              </Card>
+            )}
+
             <DefaultValue
               className={styles.defaultValue}
               activeDefaultValueTab={activeDefaultValueTab}
@@ -595,11 +676,16 @@ const NewCampaigns = () => {
           </div>
         </div>
         {visiblePreviewData && (
-          <div>
+          <div
+            style={{
+              marginTop: "12px",
+            }}
+          >
             <Card
               className={cn(styles.card)}
               title="Review"
               classTitle="title-blue"
+              classCardHead={styles.classCardHead}
               head={
                 <div className={cn(styles.nav, "tablet-hide")}>
                   <div

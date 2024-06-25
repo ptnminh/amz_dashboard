@@ -5,19 +5,39 @@ export const EXPRESSION_TYPES = [
   "ASIN_SAME_AS",
   "ASIN_CATEGORY_SAME_AS",
   "ASIN_BRAND_SAME_AS",
-  "ASIN_PRICE_LESS_THAN",
-  "ASIN_PRICE_BETWEEN",
-  "ASIN_PRICE_GREATER_THAN",
-  "ASIN_REVIEW_RATING_LESS_THAN",
-  "ASIN_REVIEW_RATING_BETWEEN",
-  "ASIN_REVIEW_RATING_GREATER_THAN",
-  "ASIN_IS_PRIME_SHIPPING_ELIGIBLE",
-  "ASIN_AGE_RANGE_SAME_AS",
-  "ASIN_GENRE_SAME_AS",
-  "ASIN_EXPANDED_FROM",
+  // "ASIN_PRICE_LESS_THAN",
+  // "ASIN_PRICE_BETWEEN",
+  // "ASIN_PRICE_GREATER_THAN",
+  // "ASIN_REVIEW_RATING_LESS_THAN",
+  // "ASIN_REVIEW_RATING_BETWEEN",
+  // "ASIN_REVIEW_RATING_GREATER_THAN",
+  // "ASIN_IS_PRIME_SHIPPING_ELIGIBLE",
+  // "ASIN_AGE_RANGE_SAME_AS",
+  // "ASIN_GENRE_SAME_AS",
+  // "ASIN_EXPANDED_FROM",
 ];
 export const STORES = ["PFH", "QZL", "GGT", "KH", "PG", "PPN", "BIG"];
 export const CHANNELS = ["FBM", "FBA"];
+export const CHANNELS_OPTIONS = [
+  {
+    id: 1,
+    title: "FBM",
+  },
+  {
+    id: 2,
+    title: "FBA",
+  },
+];
+export const CAMPAIGN_TYPES_OPTIONS = [
+  {
+    id: 1,
+    title: "KW",
+  },
+  {
+    id: 2,
+    title: "ASIN",
+  },
+];
 export const CAMP_TYPES = ["AUTO", "KEYWORD", "ASIN"];
 export const CREATE_SKU_CAMP_METHOD = [
   {

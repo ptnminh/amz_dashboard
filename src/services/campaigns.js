@@ -28,4 +28,17 @@ export const campaignServices = {
       return false;
     }
   },
+  duplicateCampaigns: async ({ campaignNames, stores }) => {
+    try {
+      const response = await axios.post(`${hostAPI}/api/campaigns/duplicate`, {
+        campaignNames,
+        stores,
+      });
+      const { data: result } = response;
+      return result;
+    } catch (error) {
+      console.log("Error at duplicateCampaigns:", error);
+      return false;
+    }
+  },
 };

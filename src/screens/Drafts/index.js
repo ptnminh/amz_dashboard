@@ -4,23 +4,29 @@ import styles from "./Drafts.module.sass";
 import Card from "../../components/Card";
 import Form from "../../components/Form";
 import Schedule from "../../components/Schedule";
+import DuplicateCampaign from "./Schedule";
 
 import Table from "./Table";
-import { Box, LoadingOverlay, Pagination } from "@mantine/core";
+import { Box, LoadingOverlay, Pagination, Text } from "@mantine/core";
 import Icon from "../../components/Icon";
 import { isEmpty, map } from "lodash";
 import { campaignServices } from "../../services";
 import { useDisclosure } from "@mantine/hooks";
 import { showNotification } from "../../utils/index";
 import Modal from "../../components/Modal";
+import { modals } from "@mantine/modals";
+import TextInput from "../../components/TextInput";
 
 const CampaignHistories = () => {
   const [search, setSearch] = useState("");
   const [visibleModalDuplicate, setVisibleModalDuplicate] = useState(false);
   const [visibleModalSchedule, setVisibleModalSchedule] = useState(false);
   const [campaigns, setCampaigns] = useState([]);
+  const [stores, setStores] = useState([]);
   const [startDate, setStartDate] = useState(new Date());
   const [startTime, setStartTime] = useState(new Date());
+  const [duplicateCampaignResult, setDuplicateCampaignResult] = useState("");
+  const [visibleCampaignResult, setVisibleCampaignResult] = useState(true);
   const [pagination, setPagination] = useState({
     currentPage: 1,
     totalPages: 1,
@@ -33,6 +39,20 @@ const CampaignHistories = () => {
       close: closeLoadingCampaignHistories,
     },
   ] = useDisclosure(false);
+
+  const openModal = () =>
+    modals.openConfirmModal({
+      title: "Please confirm your action",
+      children: (
+        <Text size="sm">
+          This action is so important that you are required to confirm it with a
+          modal. Please click one of these buttons to proceed.
+        </Text>
+      ),
+      labels: { confirm: "Confirm", cancel: "Cancel" },
+      onCancel: () => console.log("Cancel"),
+      onConfirm: () => handleDuplicateCampaigns(),
+    });
 
   const fetchCampaigns = async (page = 1) => {
     openLoadingCampaignHistories();
@@ -58,10 +78,12 @@ const CampaignHistories = () => {
 
   useEffect(() => {
     fetchCampaigns(pagination.currentPage);
+    setSelectedFilters([]);
   }, [search, pagination.currentPage]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setSelectedFilters([]);
     fetchCampaigns(1);
   };
 
@@ -81,6 +103,36 @@ const CampaignHistories = () => {
 
   const handlePageChange = (page) => {
     setPagination((prev) => ({ ...prev, currentPage: page }));
+  };
+
+  const handleDuplicateCampaigns = async () => {
+    console.log(selectedFilters);
+    console.log(stores);
+    openLoadingCampaignHistories();
+    try {
+      const response = await campaignServices.duplicateCampaigns({
+        campaignNames: selectedFilters,
+        stores,
+      });
+      if (response) {
+        showNotification(
+          "Thành công",
+          "Duplicate Campaigns thành công",
+          "blue"
+        );
+        fetchCampaigns(pagination.currentPage);
+        setSelectedFilters([]);
+        setVisibleCampaignResult(true);
+        setDuplicateCampaignResult(response.data);
+        setStores([]);
+      } else {
+        showNotification("Thất bại", "Duplicate Campaigns thất bại", "red");
+      }
+    } catch (error) {
+      showNotification("Thất bại", "Có lỗi xảy ra", "red");
+    } finally {
+      closeLoadingCampaignHistories();
+    }
   };
 
   return (
@@ -154,6 +206,8 @@ const CampaignHistories = () => {
               visibleModalDuplicate={visibleModalDuplicate}
               setVisibleModalDuplicate={setVisibleModalDuplicate}
               handleSelectAllCampaigns={handleSelectAllCampaigns}
+              stores={stores}
+              setStores={setStores}
             />
           </div>
         </Card>
@@ -178,7 +232,49 @@ const CampaignHistories = () => {
             note={"Chọn ngày và giờ trong tương lai muốn publish campaign"}
           />
         </Modal>
+        <Modal
+          visible={visibleModalDuplicate}
+          onClose={() => setVisibleModalDuplicate(false)}
+        >
+          <DuplicateCampaign
+            stores={stores}
+            setStores={setStores}
+            onConfirm={openModal}
+            setVisibleModalDuplicate={setVisibleModalDuplicate}
+          />
+        </Modal>
       </Box>
+      {duplicateCampaignResult && visibleCampaignResult && (
+        <Box style={{ marginTop: 20 }}>
+          <Card
+            className={cn(styles.card)}
+            title="Kết quả"
+            classTitle="title-red"
+            head={
+              <div className={cn(styles.nav, "tablet-hide")}>
+                <div
+                  className={cn(styles.link, {
+                    [styles.active]: visibleCampaignResult,
+                  })}
+                  onClick={() => setVisibleCampaignResult(false)}
+                  style={{ cursor: "pointer" }}
+                >
+                  Hide
+                </div>
+              </div>
+            }
+          >
+            <TextInput
+              className={styles.maximumCamp}
+              name="duplicateCampaignResult"
+              type="text"
+              label={"Chi tiết kết quả"}
+              isTextArea={true}
+              value={duplicateCampaignResult}
+            />
+          </Card>
+        </Box>
+      )}
     </>
   );
 };

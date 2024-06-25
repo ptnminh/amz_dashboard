@@ -8,7 +8,7 @@ import Dropdown from "../../../components/Dropdown";
 import Checkbox from "../../../components/Checkbox";
 import {
   CAMP_TYPES,
-  CHANNELS,
+  CHANNELS_OPTIONS,
   CREATE_SKU_CAMP_METHOD,
   STORES,
 } from "../../../constant";
@@ -32,34 +32,44 @@ const CampaignInfo = ({
   handleResetData,
   previewData,
   handlePreviewData,
+  setFormValue,
 }) => {
   useEffect(() => {
     if (!isEmpty(previewData)) setVisibleReviewTable(true);
   }, [previewData]);
   return (
-    <Card
-      className={cn(styles.card, className)}
-      title="Campaign Info"
-      classTitle="title-green"
-    >
-      <div className={styles.description}>
-        <div className={styles.campType}>
-          <Dropdown
-            className={styles.dropdown}
-            classDropdownHead={styles.dropdownHead}
-            value={campType}
-            setValue={setCampType}
-            options={CAMP_TYPES}
-            label={"Camp Type"}
-          />{" "}
+    <>
+      <Card
+        className={cn(styles.card, className)}
+        title="1. Create Type"
+        classTitle="title-green"
+        classCardHead={styles.classCardHead}
+      >
+        <div className={styles.description}>
+          <div className={styles.campType}>
+            <Dropdown
+              className={styles.dropdown}
+              classDropdownHead={styles.dropdownHead}
+              value={campType}
+              setValue={setCampType}
+              options={CAMP_TYPES}
+            />{" "}
+          </div>
         </div>
+      </Card>
+      <Card
+        className={cn(styles.card, className)}
+        title="2. SKU"
+        classTitle="title-green"
+        classCardHead={styles.classCardHead}
+      >
         <div
           className={styles.group}
           style={{ width: "100%", marginBottom: 24 }}
         >
           <TextInput
             className={styles.textarea}
-            label={"SKUs"}
+            // label={"SKUs"}
             name="SKUs"
             type="text"
             isTextArea={true}
@@ -67,15 +77,28 @@ const CampaignInfo = ({
             register={register("SKUs", { required: true })}
             error={errors.SKUs}
           />
-          {CREATE_SKU_CAMP_METHOD.map((x, index) => (
-            <Checkbox
-              className={styles.checkbox}
-              content={x.title}
-              value={selectedCreateCampMethod === x.id}
-              onChange={() => handleChange(x.id)}
-              key={index}
-            />
-          ))}
+          <div
+            style={{
+              display: "flex",
+              minWidth: "100%",
+              marginLeft: 6,
+            }}
+          >
+            {CREATE_SKU_CAMP_METHOD.map((x, index) => (
+              <Checkbox
+                className={styles.checkbox}
+                content={x.title}
+                value={selectedCreateCampMethod === x.id}
+                onChange={() => {
+                  if (x.id === 1 || x.id === 3)
+                    setFormValue("extendPrefix", "Gr");
+                  else setFormValue("extendPrefix", "");
+                  handleChange(x.id);
+                }}
+                key={index}
+              />
+            ))}
+          </div>
           {selectedCreateCampMethod === 3 && (
             <TextInput
               className={styles.maximumCamp}
@@ -91,23 +114,54 @@ const CampaignInfo = ({
             />
           )}
         </div>
-        <Dropdown
-          className={styles.dropdown}
-          classDropdownHead={styles.dropdownHead}
-          value={store}
-          setValue={setStore}
-          options={STORES}
-          label={"Store"}
-        />{" "}
-        <Dropdown
-          className={styles.dropdown}
-          classDropdownHead={styles.dropdownHead}
-          value={channel}
-          setValue={setChannel}
-          options={CHANNELS}
-          label={"Prefix"}
-        />{" "}
+      </Card>
+      <Card
+        className={cn(styles.card, className)}
+        title="4. Store"
+        classTitle="title-green"
+        classCardHead={styles.classCardHead}
+        head={
+          <>
+            <Dropdown
+              className={cn(styles.dropdown, styles.storeDropdown)}
+              classDropdownHead={styles.dropdownHead}
+              value={store}
+              setValue={setStore}
+              options={STORES}
+            />{" "}
+          </>
+        }
+      ></Card>
+      <Card
+        className={cn(styles.card, className)}
+        title="6. Prefix (Camp Name)"
+        classTitle="title-green"
+        classCardHead={styles.classCardHead}
+        head={
+          <>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "flex-end",
+                gap: "15px",
+              }}
+            >
+              {CHANNELS_OPTIONS.map((x, index) => (
+                <Checkbox
+                  className={styles.checkboxChannel}
+                  content={x.title}
+                  value={channel === x.title}
+                  onChange={() => setChannel(x.title)}
+                  key={index}
+                />
+              ))}
+            </div>
+          </>
+        }
+      >
         <TextInput
+          style={{ marginTop: "12px" }}
           className={styles.field}
           name="extendPrefix"
           type="text"
@@ -116,36 +170,36 @@ const CampaignInfo = ({
           register={register("extendPrefix", { required: false })}
           error={errors.extendPrefix}
         />
-      </div>
-      <div className={styles.actions}>
-        <div
-          className={cn("button-stroke-red button-small", styles.clearButton)}
-          style={{ cursor: "pointer" }}
-          onClick={handleResetData}
-        >
-          <Icon name="trash" size="16" />
-          <span>Clear</span>
+        <div className={styles.actions}>
+          <div
+            className={cn("button-stroke-red button-small", styles.clearButton)}
+            style={{ cursor: "pointer" }}
+            onClick={handleResetData}
+          >
+            <Icon name="trash" size="16" />
+            <span>Clear</span>
+          </div>
+          <div
+            className={cn(
+              "button-stroke-purple button-small",
+              styles.clearButton
+            )}
+            style={{ cursor: "pointer" }}
+            onClick={handlePreviewData}
+          >
+            <Icon name="repeat" size="16" />
+            <span>Preview</span>
+          </div>
+          <button
+            className={cn("button-stroke button-small", styles.createButton)}
+            type="submit"
+          >
+            <Icon name="plus" size="16" />
+            <span>Tạo</span>
+          </button>
         </div>
-        <div
-          className={cn(
-            "button-stroke-purple button-small",
-            styles.clearButton
-          )}
-          style={{ cursor: "pointer" }}
-          onClick={handlePreviewData}
-        >
-          <Icon name="repeat" size="16" />
-          <span>Preview</span>
-        </div>
-        <button
-          className={cn("button-stroke button-small", styles.createButton)}
-          type="submit"
-        >
-          <Icon name="plus" size="16" />
-          <span>Tạo</span>
-        </button>
-      </div>
-    </Card>
+      </Card>
+    </>
   );
 };
 

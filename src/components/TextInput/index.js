@@ -65,7 +65,7 @@ const TextInput = ({
             {...register} // Use the register function here
             {...props}
             rows={100}
-            style={{ height: "250px", padding: "10px" }}
+            style={{ height: "200px", padding: "10px" }}
           />
         ) : (
           <input
