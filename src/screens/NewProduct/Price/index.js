@@ -12,9 +12,9 @@ import {
 } from "../../../constant";
 
 const CampaignAuto = ({ setStrategy, strategy, isEdit, register, errors }) => {
-  return isEdit ? (
-    <>
-      <div className={cn(styles.price)}>
+  return (
+    <div className={cn(styles.price)}>
+      {isEdit && (
         <div className={styles.fieldset}>
           <TextInput
             className={styles.field}
@@ -50,7 +50,9 @@ const CampaignAuto = ({ setStrategy, strategy, isEdit, register, errors }) => {
             error={errors.defaultBid}
           />
         </div>
+      )}
 
+      {isEdit && (
         <div className={styles.fieldset}>
           <TextInput
             className={styles.field}
@@ -79,11 +81,24 @@ const CampaignAuto = ({ setStrategy, strategy, isEdit, register, errors }) => {
             label={"Strategy"}
             classOutsideClick={styles.outsideClick}
             disabled={!isEdit}
-          />{" "}
+          />
         </div>
-      </div>{" "}
-    </>
-  ) : null;
+      )}
+      {!isEdit && (
+        <Dropdown
+          className={styles.dropdown}
+          classDropdownLabel={styles.label}
+          classDropdownHead={styles.classDropdownHead}
+          value={strategy}
+          setValue={setStrategy}
+          options={STRATEGIES}
+          label={"Strategy"}
+          classOutsideClick={styles.outsideClick}
+          disabled={!isEdit}
+        />
+      )}
+    </div>
+  );
 };
 
 const CampaignKeywords = ({

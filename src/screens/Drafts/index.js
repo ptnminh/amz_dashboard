@@ -5,7 +5,7 @@ import Card from "../../components/Card";
 import Form from "../../components/Form";
 import Schedule from "../../components/Schedule";
 import DuplicateCampaign from "./Schedule";
-
+import { useNavigate, useLocation } from "react-router-dom";
 import Table from "./Table";
 import { Box, LoadingOverlay, Pagination, Text } from "@mantine/core";
 import Icon from "../../components/Icon";
@@ -18,7 +18,13 @@ import { modals } from "@mantine/modals";
 import TextInput from "../../components/TextInput";
 
 const CampaignHistories = () => {
-  const [search, setSearch] = useState("");
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const queryParams = new URLSearchParams(location.search);
+  const initialSearch = queryParams.get("search") || "";
+  const initialPage = parseInt(queryParams.get("page") || "1", 10);
+  const [search, setSearch] = useState(initialSearch);
   const [visibleModalDuplicate, setVisibleModalDuplicate] = useState(false);
   const [visibleModalSchedule, setVisibleModalSchedule] = useState(false);
   const [campaigns, setCampaigns] = useState([]);
@@ -28,7 +34,7 @@ const CampaignHistories = () => {
   const [duplicateCampaignResult, setDuplicateCampaignResult] = useState("");
   const [visibleCampaignResult, setVisibleCampaignResult] = useState(true);
   const [pagination, setPagination] = useState({
-    currentPage: 1,
+    currentPage: initialPage,
     totalPages: 1,
   });
 
@@ -80,6 +86,15 @@ const CampaignHistories = () => {
     fetchCampaigns(pagination.currentPage);
     setSelectedFilters([]);
   }, [search, pagination.currentPage]);
+
+  useEffect(() => {
+    // Update the URL when search or page changes
+    const params = new URLSearchParams();
+    if (search) params.set("search", search);
+    if (pagination.currentPage !== 1)
+      params.set("page", pagination.currentPage);
+    navigate(`?${params.toString()}`, { replace: true });
+  }, [search, pagination.currentPage, navigate]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
