@@ -10,7 +10,6 @@ import {
   EXPRESSION_TYPES,
   MATCH_TYPES,
   PRODUCT_LINES_OPTIONS,
-  STORES,
   STRATEGIES,
   DEFAULT_VALUES_NAVIGATIONS,
   CREATE_KW_CAMP_METHOD,
@@ -25,7 +24,11 @@ import { useForm } from "react-hook-form";
 import {
   chunk,
   compact,
+  filter,
+  find,
   first,
+  flatMap,
+  includes,
   isEmpty,
   join,
   map,
@@ -61,7 +64,6 @@ const NewCampaigns = () => {
   const [selectedCreateCampMethodForSKU, setSelectedCreateCampMethodForSKU] =
     useState(1);
   const [channel, setChannel] = useState(CHANNELS[0]);
-  const [store, setStore] = useState(STORES[0]);
   const [campType, setCampType] = useState(CAMP_TYPES[0]);
   const [selectedCreateCampMethodForKW, setSelectedCreateCampMethodForKW] =
     useState(1);
@@ -96,14 +98,48 @@ const NewCampaigns = () => {
   const [portfolioId, setPortfolioId] = useState();
   const [keywordCount, setKeywordCount] = useState(0);
   const [createCampaignResult, setCreateCampaignResult] = useState("");
+  const [loadingAvailableStores, setLoadingAvailableStores] = useState(false);
+  const [listRunAds, setListRunAds] = useState([]);
+  const [selectAvailableStore, setSelectAvailableStore] = useState([]);
   const [campTypeTitle, setCampTypeTitle] = useState(
     CAMPAIGN_TYPES_OPTIONS[0].title
   );
+  const [availableStores, setAvailableStores] = useState([]);
   const [productLine, setProductLine] = useState("");
+  const [visiblePreviewProductLine, setVisiblePreviewProductLine] =
+    useState(false);
   const handleKeywordBlur = () => {
     const keywords = getValues("keywords");
+    console.log(keywords);
+    const pattern = /^[a-zA-Z0-9\s]+$/;
+    if (!pattern.test(keywords)) {
+      setError("keywords", {
+        type: "manual",
+        message: "You must enter at least one keyword.",
+      });
+    } else {
+      clearErrors("keywords");
+    }
     const count = keywords?.split("\n").filter(Boolean).length;
     setKeywordCount(count || 0);
+  };
+  const handleSKUsBlur = async () => {
+    setLoadingAvailableStores(true);
+    const SKUs = getValues("SKUs");
+    const listSKUs = uniq(
+      compact(map(split(trim(SKUs), "\n"), (SKU) => trim(SKU)))
+    );
+    if (isEmpty(listSKUs)) {
+      setLoadingAvailableStores(false);
+      return;
+    }
+    const listRunAdsReponse = await campaignServices.getAvailableStores(
+      listSKUs
+    );
+    setListRunAds(listRunAdsReponse);
+    const stores = uniq(flatMap(map(listRunAdsReponse, "store")));
+    setAvailableStores(stores);
+    setLoadingAvailableStores(false);
   };
   const {
     register,
@@ -111,6 +147,8 @@ const NewCampaigns = () => {
     formState: { errors },
     setValue,
     getValues,
+    setError,
+    clearErrors,
   } = useForm();
 
   const handleSyncProductLine = async () => {
@@ -121,17 +159,27 @@ const NewCampaigns = () => {
       closeLoadingProductLine();
       return;
     }
+    if (isEmpty(availableStores)) {
+      showNotification(
+        "Thất bại",
+        "Vui lòng nhập SKU để tìm store trước khi tìm sync",
+        "red"
+      );
+      closeLoadingProductLine();
+      return;
+    }
     const firstSKU = first(compact(SKUs.split("\n")));
     const prefix = split(firstSKU, "-")[0];
     const portfolios = await portfolioServices.syncPortfolio({
-      store,
       prefix,
+      stores: availableStores,
     });
     if (portfolios) {
       showNotification("Thành công", "Đồng bộ thành công", "green");
       setPortfolios(portfolios);
       const firstPortfolio = first(portfolios);
       setPortfolioId(firstPortfolio.portfolioId);
+      setVisiblePreviewProductLine(true);
     } else {
       showNotification("Thất bại", "Đồng bộ thất bại", "red");
       setPortfolioId();
@@ -148,15 +196,25 @@ const NewCampaigns = () => {
       closeLoadingProductLine();
       return;
     }
+    if (isEmpty(availableStores)) {
+      showNotification(
+        "Thất bại",
+        "Vui lòng nhập SKU để tìm store trước khi tìm Product Line",
+        "red"
+      );
+      closeLoadingProductLine();
+      return;
+    }
     const portfolios = await portfolioServices.findProductLine({
-      store,
       productLine,
+      stores: availableStores,
     });
     if (portfolios) {
       showNotification("Thành công", "Tìm thấy giá trị Product Line", "green");
       setPortfolios(portfolios);
       const firstPortfolio = first(portfolios);
       setPortfolioId(firstPortfolio.portfolioId);
+      setVisiblePreviewProductLine(true);
     } else {
       showNotification(
         "Thất bại",
@@ -181,23 +239,23 @@ const NewCampaigns = () => {
       budget,
       bid,
       topOfSearch,
-      portfolioId: inputPortfolioId,
     } = data;
-    const listSKUs = uniq(
+    const pattern = /^[a-zA-Z0-9\s]+$/;
+    if (!pattern.test(keywords)) {
+      showNotification(
+        "Thất bại",
+        "Keywords không được để trống và chỉ chứa ký tự chữ và số",
+        "red"
+      );
+      return [];
+    }
+    const allSKUs = uniq(
       compact(map(split(trim(SKUs), "\n"), (SKU) => trim(SKU)))
     );
     const listKeywords = uniq(
       compact(map(split(trim(keywords), "\n"), (keyword) => trim(keyword)))
     );
-    let chunkedSKUs = [];
     let chunkedKeywords = [];
-    if (selectedCreateCampMethodForSKU === 1 && !maximumSKUPerCampaign) {
-      chunkedSKUs = [listSKUs];
-    } else if (selectedCreateCampMethodForSKU === 2 && !maximumSKUPerCampaign) {
-      chunkedSKUs = chunk(listSKUs, 1);
-    } else if (selectedCreateCampMethodForSKU === 3 && maximumSKUPerCampaign) {
-      chunkedSKUs = chunk(listSKUs, maximumSKUPerCampaign);
-    }
 
     if (selectedCreateCampMethodForKW === 1 && !maximumKwPerCampaign) {
       chunkedKeywords = [listKeywords];
@@ -207,57 +265,91 @@ const NewCampaigns = () => {
       chunkedKeywords = chunk(listKeywords, maximumKwPerCampaign);
     }
     const preparedData = [];
-    for (let index = 0; index < chunkedSKUs.length; index++) {
-      const chunkListSKUs = chunkedSKUs[index];
-      const transformedSKUs = map(chunkListSKUs, (SKU) => {
-        if (store !== "PFH") {
-          return `${SKU}-${STORE_PREFIX_BRAND[store].prefix}`;
-        }
-        return SKU;
+    for (let store of selectAvailableStore) {
+      let chunkedSKUs = [];
+      const listSKUs = filter(allSKUs, (SKU) => {
+        const foundListRunAds = find(listRunAds, (x) => x.SKU === SKU);
+        return includes(foundListRunAds?.store, store);
       });
-      for (let i = 0; i < chunkedKeywords.length; i++) {
-        const chunkListKeywords = chunkedKeywords[i];
-        const firstSKU = transformedSKUs[0];
-        const transformedCampType = campType === "KEYWORD" ? "KW" : campType;
-        let campaignName = `${channel}_${firstSKU}${
-          extendPrefix ? "_" + extendPrefix : ""
-        }_${transformedCampType}_${moment().format(
-          "MMMDD"
-        )}_${generateRandomBytes(6)}`;
-        if (strategy && strategy === "UP_AND_DOWN") {
-          campaignName = `${channel}_${firstSKU}${
+      if (selectedCreateCampMethodForSKU === 1 && !maximumSKUPerCampaign) {
+        chunkedSKUs = [listSKUs];
+      } else if (
+        selectedCreateCampMethodForSKU === 2 &&
+        !maximumSKUPerCampaign
+      ) {
+        chunkedSKUs = chunk(listSKUs, 1);
+      } else if (
+        selectedCreateCampMethodForSKU === 3 &&
+        maximumSKUPerCampaign
+      ) {
+        chunkedSKUs = chunk(listSKUs, maximumSKUPerCampaign);
+      }
+      for (let index = 0; index < chunkedSKUs.length; index++) {
+        const chunkListSKUs = chunkedSKUs[index];
+        const transformedSKUs = map(chunkListSKUs, (SKU) => {
+          if (store !== "PFH") {
+            return `${SKU}-${STORE_PREFIX_BRAND[store].prefix}`;
+          }
+          return SKU;
+        });
+
+        if (isEmpty(transformedSKUs)) {
+          continue;
+        }
+        const foundPortfolio = find(portfolios, (x) => x.store === store);
+        if (!foundPortfolio) {
+          showNotification(
+            "Thất bại",
+            `Không tìm thấy Portfolio cho store ${store}`,
+            "red"
+          );
+          continue;
+        }
+
+        for (let i = 0; i < chunkedKeywords.length; i++) {
+          const chunkListKeywords = chunkedKeywords[i];
+          const firstSKU = transformedSKUs[0];
+          const transformedCampType = campType === "KEYWORD" ? "KW" : campType;
+          let campaignName = `${channel}_${firstSKU}${
             extendPrefix ? "_" + extendPrefix : ""
-          }_${transformedCampType}_U&D_${moment().format(
+          }_${transformedCampType}_${moment().format(
             "MMMDD"
           )}_${generateRandomBytes(6)}`;
+          if (strategy && strategy === "UP_AND_DOWN") {
+            campaignName = `${channel}_${firstSKU}${
+              extendPrefix ? "_" + extendPrefix : ""
+            }_${transformedCampType}_U&D_${moment().format(
+              "MMMDD"
+            )}_${generateRandomBytes(6)}`;
+          }
+          preparedData.push({
+            skus: join(transformedSKUs, ","),
+            ...(campType === "KEYWORD"
+              ? {
+                  keywords: join(chunkListKeywords, ","),
+                }
+              : campType === "ASIN"
+              ? {
+                  asins: join(chunkListKeywords, ","),
+                }
+              : {}),
+            store,
+            defaultBid,
+            state: "ENABLED",
+            dailyBudget: budget,
+            ...(campType !== "AUTO" && { bid }),
+            ...(campType === "KEYWORD" && { matchType }),
+            ...(campType === "ASIN" && { expressionType }),
+            type: campType === "AUTO" ? "AUTO" : "MANUAL",
+            topOfSearch,
+            adGroupName: `Ad group - ${moment().format(
+              "YYYY-MM-DD HH:mm:ss.SSS"
+            )}`,
+            campaignName,
+            strategy: MAPPED_STRATEGY[strategy],
+            portfolioId: foundPortfolio?.portfolioId,
+          });
         }
-        preparedData.push({
-          skus: join(transformedSKUs, ","),
-          ...(campType === "KEYWORD"
-            ? {
-                keywords: join(chunkListKeywords, ","),
-              }
-            : campType === "ASIN"
-            ? {
-                asins: join(chunkListKeywords, ","),
-              }
-            : {}),
-          store,
-          defaultBid,
-          state: "ENABLED",
-          dailyBudget: budget,
-          ...(campType !== "AUTO" && { bid }),
-          ...(campType === "KEYWORD" && { matchType }),
-          ...(campType === "ASIN" && { expressionType }),
-          type: campType === "AUTO" ? "AUTO" : "MANUAL",
-          topOfSearch,
-          adGroupName: `Ad group - ${moment().format(
-            "YYYY-MM-DD HH:mm:ss.SSS"
-          )}`,
-          campaignName,
-          strategy: MAPPED_STRATEGY[strategy],
-          portfolioId: inputPortfolioId || portfolioId,
-        });
       }
     }
     console.log(preparedData);
@@ -307,6 +399,11 @@ const NewCampaigns = () => {
     }
     if (campType !== "AUTO" && isEmpty(data.keywords)) {
       showNotification("Thất bại", "Vui lòng nhập KW/ASIN", "red");
+      setReviewData([]);
+      return;
+    }
+    if (isEmpty(selectAvailableStore)) {
+      showNotification("Thất bại", "Vui lòng chọn store", "red");
       setReviewData([]);
       return;
     }
@@ -369,9 +466,9 @@ const NewCampaigns = () => {
           setValue("budget", 15);
           setValue("topOfSearch", 0);
           setValue("bid", 1.25);
-          setCampTypePlaceHolder(`father gifts\ngifts\nmother gifts`);
-          setCampTypeTitle("KW");
         }
+        setCampTypePlaceHolder(`father gifts\ngifts\nmother gifts`);
+        setCampTypeTitle("KW");
         break;
       case "ASIN":
         if (activeDefaultValueTab === "Default") {
@@ -379,11 +476,9 @@ const NewCampaigns = () => {
           setValue("budget", 15);
           setValue("topOfSearch", 0);
           setValue("bid", 1.25);
-          setCampTypePlaceHolder(
-            `B0C99KFYS6\nB09P48SXPN\nB0CBKT4SJ5\nB09CMDDTW3\nB08P7587QQ`
-          );
-          setCampTypeTitle("ASIN");
         }
+        setCampTypePlaceHolder(`B0C99KFYS6\nB09P48SXPN\nB0CBKT4SJ5`);
+        setCampTypeTitle("ASIN");
         break;
       default:
         break;
@@ -410,8 +505,6 @@ const NewCampaigns = () => {
               setCampType={setCampType}
               channel={channel}
               setChannel={setChannel}
-              store={store}
-              setStore={setStore}
               selectedCreateCampMethod={selectedCreateCampMethodForSKU}
               handleChange={handleChangeForSKU}
               handleSubmit={handleSubmit}
@@ -424,6 +517,12 @@ const NewCampaigns = () => {
               previewData={reviewData}
               handlePreviewData={handlePreviewData}
               setFormValue={setValue}
+              handleSKUsBlur={handleSKUsBlur}
+              availableStores={availableStores}
+              setAvailableStores={setAvailableStores}
+              loadingAvailableStores={loadingAvailableStores}
+              selectAvailableStore={selectAvailableStore}
+              setSelectAvailableStore={setSelectAvailableStore}
             />
             {createCampaignResult && visibleCreateCampResult && (
               <Card
@@ -514,8 +613,27 @@ const NewCampaigns = () => {
                       <Icon name="link" size="12" />
                       <span>Sync</span>
                     </div>
-                    {!isEmpty(portfolios) && (
-                      <ProductLine data={portfolios} activeTable={true} />
+                    {!isEmpty(portfolios) && visiblePreviewProductLine && (
+                      <div
+                        className={cn(
+                          "button-stroke button-small",
+                          styles.createButton
+                        )}
+                        type="button"
+                        style={{
+                          cursor: "pointer",
+                          marginLeft: "12px",
+                        }}
+                        onClick={() => setVisiblePreviewProductLine(false)}
+                      >
+                        <Icon name="close" size="12" />
+                        <span>Hide</span>
+                      </div>
+                    )}
+                    {!isEmpty(portfolios) && visiblePreviewProductLine && (
+                      <div>
+                        <ProductLine data={portfolios} activeTable={true} />
+                      </div>
                     )}
                   </>
                 )}
@@ -559,8 +677,27 @@ const NewCampaigns = () => {
                       <Icon name="leaderboard" size="12" />
                       <span>Find</span>
                     </div>
-                    {!isEmpty(portfolios) && (
-                      <ProductLine data={portfolios} activeTable={true} />
+                    {!isEmpty(portfolios) && visiblePreviewProductLine && (
+                      <div
+                        className={cn(
+                          "button-stroke button-small",
+                          styles.createButton
+                        )}
+                        type="button"
+                        style={{
+                          cursor: "pointer",
+                          marginLeft: "12px",
+                        }}
+                        onClick={() => setVisiblePreviewProductLine(false)}
+                      >
+                        <Icon name="close" size="12" />
+                        <span>Hide</span>
+                      </div>
+                    )}
+                    {!isEmpty(portfolios) && visiblePreviewProductLine && (
+                      <div>
+                        <ProductLine data={portfolios} activeTable={true} />
+                      </div>
                     )}
                   </>
                 )}
@@ -569,7 +706,7 @@ const NewCampaigns = () => {
             {campType !== "AUTO" && (
               <Card
                 className={cn(styles.card)}
-                title="5. KW/ASIN"
+                title={campTypeTitle === "KW" ? "5. KW" : "5. ASIN"}
                 classTitle="title-orange"
                 classCardHead={styles.classCardHead}
                 head={
@@ -618,6 +755,7 @@ const NewCampaigns = () => {
                       placeholder={campTypePlaceHolder}
                       register={register("keywords", {
                         required: campType !== "AUTO",
+                        pattern: /^[a-zA-Z0-9\s]+$/,
                       })}
                       error={errors.keywords}
                     />

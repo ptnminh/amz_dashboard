@@ -43,6 +43,9 @@ const Row = ({
             <div className={styles.price}>{item.asins || item.keywords}</div>
           </div>
         </div>
+        <div className={styles.col}>
+          <div className={styles.lifetime}>{item.store}</div>
+        </div>
       </div>
     </>
   );

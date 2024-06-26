@@ -41,4 +41,19 @@ export const campaignServices = {
       return false;
     }
   },
+  getAvailableStores: async (skus) => {
+    try {
+      const response = await axios.post(
+        `${hostAPI}/api/keywords/ready-keywords`,
+        {
+          skus,
+        }
+      );
+      const { data: result } = response;
+      return result.data;
+    } catch (error) {
+      console.log("Error at getAvailableStores:", error);
+      return false;
+    }
+  },
 };

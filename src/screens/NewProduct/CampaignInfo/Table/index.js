@@ -36,6 +36,7 @@ const Table = ({ className, activeTable, setActiveTable, data }) => {
           </div>
           <div className={styles.col}>SKUs</div>
           <div className={styles.col}>KW/ASINs</div>
+          <div className={styles.col}>Store</div>
         </div>
         {data?.map((x, index) => (
           <Row

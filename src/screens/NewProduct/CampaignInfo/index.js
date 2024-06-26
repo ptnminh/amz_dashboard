@@ -10,9 +10,10 @@ import {
   CAMP_TYPES,
   CHANNELS_OPTIONS,
   CREATE_SKU_CAMP_METHOD,
-  STORES,
 } from "../../../constant";
 import { isEmpty } from "lodash";
+import Loader from "../../../components/Loader";
+import MultiSelect from "../../../components/Multiselect";
 
 const CampaignInfo = ({
   className,
@@ -33,6 +34,12 @@ const CampaignInfo = ({
   previewData,
   handlePreviewData,
   setFormValue,
+  handleSKUsBlur,
+  availableStores,
+  setAvailableStores,
+  loadingAvailableStores,
+  selectAvailableStore,
+  setSelectAvailableStore,
 }) => {
   useEffect(() => {
     if (!isEmpty(previewData)) setVisibleReviewTable(true);
@@ -73,9 +80,10 @@ const CampaignInfo = ({
             name="SKUs"
             type="text"
             isTextArea={true}
-            placeholder={`GL-Q006 \nGL-MH002 \nGL-MH003 \nGL-MH001 \nGL-Q002 \nGL-Q003`}
+            placeholder={`GL-Q006 \nGL-MH002`}
             register={register("SKUs", { required: true })}
             error={errors.SKUs}
+            onBlur={handleSKUsBlur}
           />
           <div
             style={{
@@ -122,13 +130,20 @@ const CampaignInfo = ({
         classCardHead={styles.classCardHead}
         head={
           <>
-            <Dropdown
-              className={cn(styles.dropdown, styles.storeDropdown)}
-              classDropdownHead={styles.dropdownHead}
-              value={store}
-              setValue={setStore}
-              options={STORES}
-            />{" "}
+            {loadingAvailableStores ? (
+              <Loader className={styles.loader} />
+            ) : !isEmpty(availableStores) ? (
+              <MultiSelect
+                className={styles.multiSelect}
+                values={selectAvailableStore}
+                setValues={setSelectAvailableStore}
+                options={availableStores}
+              />
+            ) : (
+              <p>
+                <span style={{ color: "red" }}>No available stores</span>
+              </p>
+            )}
           </>
         }
       ></Card>
