@@ -376,7 +376,7 @@ const NewCampaigns = () => {
     setPortfolios([]);
     setReviewData([]);
     closeLoadingCreateCamp();
-    visibleCreateCampResult(true);
+    setVisibleCreateCampResult(true);
     return true;
   };
 
