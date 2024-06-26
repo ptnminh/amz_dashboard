@@ -240,15 +240,6 @@ const NewCampaigns = () => {
       bid,
       topOfSearch,
     } = data;
-    const pattern = /^[a-zA-Z0-9\s]+$/;
-    if (!pattern.test(keywords)) {
-      showNotification(
-        "Thất bại",
-        "Keywords không được để trống và chỉ chứa ký tự chữ và số",
-        "red"
-      );
-      return [];
-    }
     const allSKUs = uniq(
       compact(map(split(trim(SKUs), "\n"), (SKU) => trim(SKU)))
     );
