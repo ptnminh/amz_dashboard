@@ -40,10 +40,14 @@ import moment from "moment-timezone";
 import Table from "./CampaignInfo/Table";
 import CryptoJS from "crypto-js";
 import { useDisclosure } from "@mantine/hooks";
-import { Box, LoadingOverlay } from "@mantine/core";
+import { Autocomplete, Box, LoadingOverlay } from "@mantine/core";
 import { showNotification } from "../../utils/index";
 import ProductLine from "./ProductLine";
-import { campaignServices, portfolioServices } from "../../services";
+import {
+  campaignServices,
+  keywordServices,
+  portfolioServices,
+} from "../../services";
 import { Tooltip } from "react-tooltip";
 
 const generateRandomBytes = (length) => {
@@ -65,6 +69,7 @@ const NewCampaigns = () => {
     useState(1);
   const [channel, setChannel] = useState(CHANNELS[0]);
   const [campType, setCampType] = useState(CAMP_TYPES[0]);
+  const [allTemplates, setAllTemplates] = useState([]);
   const [selectedCreateCampMethodForKW, setSelectedCreateCampMethodForKW] =
     useState(1);
   const [visibleCreateCampResult, setVisibleCreateCampResult] = useState(false);
@@ -110,7 +115,6 @@ const NewCampaigns = () => {
     useState(false);
   const handleKeywordBlur = () => {
     const keywords = getValues("keywords");
-    console.log(keywords);
     const pattern = /^[a-zA-Z0-9\s]+$/;
     if (!pattern.test(keywords)) {
       setError("keywords", {
@@ -480,6 +484,17 @@ const NewCampaigns = () => {
     setValue("extendPrefix", "Gr");
   }, []);
 
+  const fetchTemplates = async () => {
+    const templates = await keywordServices.getTemplatesKeyword({
+      isTakeAll: true,
+    });
+    setAllTemplates(templates.data);
+  };
+
+  useEffect(() => {
+    fetchTemplates();
+  }, []);
+
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)} style={{ position: "relative" }}>
@@ -709,26 +724,31 @@ const NewCampaigns = () => {
                       gap: "15px",
                     }}
                   >
-                    {CAMPAIGN_TYPES_OPTIONS.map((x, index) => (
-                      <Checkbox
-                        className={styles.checkboxChannel}
-                        content={x.title}
-                        value={campTypeTitle === x.title}
-                        onChange={() => {
-                          if (x.title === "KW") {
-                            setCampTypePlaceHolder(
-                              `father gifts\ngifts\nmother gifts`
-                            );
-                          } else {
-                            setCampTypePlaceHolder(
-                              `B0C99KFYS6\nB09P48SXPN\nB0CBKT4SJ5\nB09CMDDTW3\nB08P7587QQ`
-                            );
-                          }
-                          setCampTypeTitle(x.title);
+                    <span>
+                      <Autocomplete
+                        placeholder="Pick value or enter anything"
+                        data={map(allTemplates, "name") || []}
+                        withScrollArea={false}
+                        styles={{
+                          dropdown: { maxHeight: 200, overflowY: "auto" },
                         }}
-                        key={index}
+                        onChange={(value) => {
+                          if (value) {
+                            const foundTemplate = find(
+                              allTemplates,
+                              (x) => x.name === value
+                            );
+                            if (foundTemplate) {
+                              setValue(
+                                "keywords",
+                                join(foundTemplate.keywords, "\n")
+                              );
+                            }
+                          }
+                        }}
+                        onBlur={handleKeywordBlur}
                       />
-                    ))}
+                    </span>
                   </div>
                 }
               >

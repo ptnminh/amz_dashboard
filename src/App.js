@@ -2,15 +2,13 @@ import "react-loading-skeleton/dist/skeleton.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "./styles/app.sass";
 import Page from "./components/Page";
-import Home from "./screens/Home";
-import ProductsDashboard from "./screens/ProductsDashboard";
 import NewCampaigns from "./screens/NewProduct";
 import Drafts from "./screens/Drafts";
 import Released from "./screens/Released";
 import Comments from "./screens/Comments";
 import Scheduled from "./screens/Scheduled";
 import Customers from "./screens/Customers";
-import CustomerList from "./screens/CustomerList";
+import TemplateKW from "./screens/TemplateKW";
 import Promote from "./screens/Promote";
 import Notification from "./screens/Notification";
 import Settings from "./screens/Settings";
@@ -64,6 +62,14 @@ function App() {
           }
         />
         <Route
+          path="/campaigns/template"
+          element={
+            <Page title="Campaigns">
+              <TemplateKW />
+            </Page>
+          }
+        />
+        <Route
           path="/campaigns/drafts"
           element={
             <Page title="Drafts">
@@ -107,7 +113,7 @@ function App() {
           path="/customers/customer-list"
           element={
             <Page title="Customer list">
-              <CustomerList />
+              <TemplateKW />
             </Page>
           }
         />

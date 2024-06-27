@@ -24,6 +24,10 @@ const navigation = [
         title: "History",
         url: "/campaigns/history",
       },
+      {
+        title: "Template",
+        url: "/campaigns/template",
+      },
     ],
   },
   // {
