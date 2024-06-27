@@ -6,7 +6,7 @@ import { useMutation } from "@tanstack/react-query";
 import Icon from "../../../components/Icon";
 import { keywordServices } from "../../../services";
 import { showNotification } from "../../../utils/index";
-import { filter, includes, map, uniq } from "lodash";
+import { compact, filter, includes, map, uniq } from "lodash";
 
 //CREATE hook (post new user to api)
 function useCreateKeyword(name, exKeywords, setKeywords) {
@@ -22,7 +22,7 @@ function useCreateKeyword(name, exKeywords, setKeywords) {
       const createNewKeywordResponse =
         await keywordServices.createNewKeywordInTemplate({
           name,
-          keywords: transformedKeywords,
+          keywords: compact(transformedKeywords),
         });
       return createNewKeywordResponse;
     },
@@ -62,7 +62,7 @@ function useUpdateKeyword(name, exKeywords, setKeywords) {
       const createNewKeywordResponse =
         await keywordServices.createNewKeywordInTemplate({
           name,
-          keywords: transformedKeywords,
+          keywords: compact(transformedKeywords),
         });
       return createNewKeywordResponse;
     },
@@ -96,7 +96,7 @@ function useDeleteKeyword(name, exKeywords, setKeywords) {
       const createNewKeywordResponse =
         await keywordServices.createNewKeywordInTemplate({
           name,
-          keywords: transformedKeywords,
+          keywords: compact(transformedKeywords),
         });
       return createNewKeywordResponse;
     },

@@ -5,7 +5,7 @@ import Card from "../../components/Card";
 import Form from "../../components/Form";
 import Table from "./Table";
 import Details from "./Details";
-import { includes, isEmpty, map, split, uniq } from "lodash";
+import { compact, includes, isEmpty, map, split, uniq } from "lodash";
 import TextInputComponent from "../../components/TextInput";
 import Icon from "../../components/Icon";
 import { useDisclosure } from "@mantine/hooks";
@@ -134,7 +134,7 @@ const TemplateKW = () => {
   };
   const handleBlurKeywords = () => {
     const { keywords } = getValues();
-    setOptions(uniq(split(keywords, "\n")));
+    setOptions(compact(uniq(split(keywords, "\n"))));
   };
 
   const handleDeleteTemplateKeyword = async () => {
