@@ -115,7 +115,7 @@ const NewCampaigns = () => {
     useState(false);
   const handleKeywordBlur = () => {
     const keywords = getValues("keywords");
-    const pattern = /^[a-zA-Z0-9\s]+$/;
+    const pattern = /^[a-zA-Z0-9\s']*$/;
     if (!pattern.test(keywords)) {
       setError("keywords", {
         type: "manual",
