@@ -23,6 +23,7 @@ import {
   Tooltip,
 } from "@mantine/core";
 import { useForm } from "react-hook-form";
+import { IconDownload } from "@tabler/icons-react";
 import { keywordServices } from "../../services";
 import { showNotification } from "../../utils/index";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -307,6 +308,16 @@ const TemplateKW = () => {
                     </span>
                   </Tooltip>
                 </div>
+                {/* <Button
+                  leftSection={<IconDownload />}
+                  style={{
+                    backgroundColor: "#FF6A55",
+                    marginLeft: "auto",
+                  }}
+                  variant="filled"
+                >
+                  Export All Templates
+                </Button> */}
               </>
             }
           >

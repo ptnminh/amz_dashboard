@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect } from "react";
 import { MantineReactTable, useMantineReactTable } from "mantine-react-table";
-import { Button, Flex, Text, Textarea, Tooltip } from "@mantine/core";
+import { Box, Button, Flex, Text, Textarea, Tooltip } from "@mantine/core";
 import { modals } from "@mantine/modals";
 import { useMutation } from "@tanstack/react-query";
 import Icon from "../../../components/Icon";
@@ -8,7 +8,7 @@ import { keywordServices } from "../../../services";
 import { showNotification } from "../../../utils/index";
 import { compact, filter, includes, isEmpty, map, split, uniq } from "lodash";
 import { useEdit } from "../../../hooks";
-
+import { IconPlus, IconTrash } from "@tabler/icons-react";
 //CREATE hook (post new user to api)
 function useCreateKeyword(name, exKeywords, setKeywords) {
   return useMutation({
@@ -140,10 +140,18 @@ function useUpdateKeyword(name, exKeywords, setKeywords) {
 function useDeleteKeyword(name, exKeywords, setKeywords) {
   return useMutation({
     mutationFn: async (keyword) => {
-      const { id } = keyword;
-      const newKeywords = filter(exKeywords, (item) => {
-        return item.id !== id;
-      });
+      const { id, ids } = keyword;
+      let newKeywords = [];
+      if (id !== undefined) {
+        newKeywords = filter(exKeywords, (item) => {
+          return item.id !== id;
+        });
+      } else {
+        newKeywords = filter(exKeywords, (item) => {
+          return !includes(ids, item.id);
+        });
+      }
+
       const transformedKeywords = uniq(map(newKeywords, "keyword"));
       //send api update request here
       const createNewKeywordResponse =
@@ -174,6 +182,7 @@ const KeywordTable = ({ keywords, name }) => {
   const [validationErrors, setValidationErrors] = useState({});
   const [data, setData] = useState(keywords || []);
   const [templateName, setTemplateName] = useState(name);
+  const [rowSelection, setRowSelection] = useState({});
   useEffect(() => {
     setData(keywords);
     setTemplateName(name);
@@ -252,6 +261,14 @@ const KeywordTable = ({ keywords, name }) => {
     }
   };
 
+  const handleExportRows = (rows) => {
+    console.log(rows);
+  };
+
+  const handleDeleteSelectedRows = async ({ rows }) => {
+    await deleteKeyword({ ids: map(rows, "id") });
+  };
+
   //DELETE action
   const openDeleteConfirmModal = (row) =>
     modals.openConfirmModal({
@@ -286,6 +303,8 @@ const KeywordTable = ({ keywords, name }) => {
     onCreatingRowSave: handleCreateKeyword,
     onEditingRowCancel: () => setValidationErrors({}),
     onEditingRowSave: handleSaveKeyword,
+    enableDensityToggle: false,
+    initialState: { density: "xs" },
     renderRowActions: ({ row, table }) => (
       <Flex gap="md">
         <Tooltip label="Edit">
@@ -306,14 +325,67 @@ const KeywordTable = ({ keywords, name }) => {
         </Tooltip>
       </Flex>
     ),
+    positionActionsColumn: "last",
+    enableRowSelection: true,
     renderTopToolbarCustomActions: ({ table }) => (
-      <Button
-        onClick={() => {
-          table.setCreatingRow(true); //simplest way to open the create row modal with no default values
+      <Box
+        sx={{
+          display: "flex",
+          gap: "24px",
+          padding: "8px",
+          flexWrap: "wrap",
         }}
       >
-        Create New Keyword
-      </Button>
+        {/* <Button
+          disabled={table.getPrePaginationRowModel().rows.length === 0}
+          onClick={() =>
+            handleExportRows(table.getPrePaginationRowModel().rows)
+          }
+          leftSection={<IconDownload />}
+          style={{ marginRight: "16px", backgroundColor: "#83BF6E" }}
+          variant="filled"
+        >
+          Export All Rows
+        </Button> */}
+        <Button
+          onClick={() => {
+            table.setCreatingRow(true);
+          }}
+          leftSection={<IconPlus />}
+        >
+          Create New Keyword
+        </Button>
+        {(table.getIsSomeRowsSelected() || table.getIsAllRowsSelected()) && (
+          <>
+            {/* <Button
+              //only export selected rows
+              onClick={() => handleExportRows(table.getSelectedRowModel().rows)}
+              leftSection={<IconDownload />}
+              style={{
+                marginLeft: "16px",
+                backgroundColor: "#8E59FF",
+              }}
+              variant="filled"
+            >
+              Export Selected Rows
+            </Button> */}
+            <Button
+              //only export selected rows
+              onClick={() =>
+                handleDeleteSelectedRows(table.getSelectedRowModel())
+              }
+              leftSection={<IconTrash />}
+              style={{
+                marginLeft: "16px",
+                backgroundColor: "#FF6A55",
+              }}
+              variant="filled"
+            >
+              Delete
+            </Button>
+          </>
+        )}
+      </Box>
     ),
     state: {
       isSaving: isCreatingKeyword || isUpdatingKeyword || isDeletingKeyword,

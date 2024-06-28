@@ -40,8 +40,14 @@ import moment from "moment-timezone";
 import Table from "./CampaignInfo/Table";
 import CryptoJS from "crypto-js";
 import { useDisclosure } from "@mantine/hooks";
-import { Autocomplete, Box, LoadingOverlay } from "@mantine/core";
+import {
+  Autocomplete,
+  Box,
+  LoadingOverlay,
+  Tooltip as MantineToolTip,
+} from "@mantine/core";
 import { showNotification } from "../../utils/index";
+import { IconFileImport } from "@tabler/icons-react";
 import ProductLine from "./ProductLine";
 import {
   campaignServices,
@@ -115,8 +121,11 @@ const NewCampaigns = () => {
     useState(false);
   const handleKeywordBlur = () => {
     const keywords = getValues("keywords");
-    const pattern = /^[a-zA-Z0-9\s']*$/;
-    if (!pattern.test(keywords)) {
+    const pattern = /^[a-zA-Z0-9\s'-]*$/;
+    const invalidKeywords = keywords
+      .split("\n")
+      .filter((keyword) => !pattern.test(keyword));
+    if (invalidKeywords.length > 0) {
       setError("keywords", {
         type: "manual",
         message: "You must enter at least one keyword.",
@@ -724,6 +733,13 @@ const NewCampaigns = () => {
                       gap: "15px",
                     }}
                   >
+                    <span>
+                      <MantineToolTip label="Import">
+                        <span style={{ cursor: "pointer" }}>
+                          <IconFileImport color="#83BF6E" />
+                        </span>
+                      </MantineToolTip>
+                    </span>
                     <span>
                       <Autocomplete
                         placeholder="Pick value or enter anything"
