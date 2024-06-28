@@ -115,7 +115,7 @@ const NewCampaigns = () => {
     useState(false);
   const handleKeywordBlur = () => {
     const keywords = getValues("keywords");
-    const pattern = /^[a-zA-Z0-9\s'-]*$/;
+    const pattern = /^(?![Bb]0)[a-zA-Z0-9\s'-]*$/;
     const invalidKeywords = keywords
       .split("\n")
       .filter((keyword) => !pattern.test(keyword));
@@ -277,6 +277,15 @@ const NewCampaigns = () => {
         showNotification("Thất bại", "ASIN không hợp lệ", "red");
         return;
       }
+    } else if (campType === "KEYWORD") {
+      const pattern = /^(?![Bb]0)[a-zA-Z0-9\s'-]*$/;
+      const invalidKeywords = listKeywords.filter(
+        (keyword) => !pattern.test(keyword)
+      );
+      if (invalidKeywords.length > 0) {
+        showNotification("Thất bại", "Keyword không hợp lệ", "red");
+        return;
+      }
     }
     let chunkedKeywords = [];
 
@@ -391,7 +400,7 @@ const NewCampaigns = () => {
     const preparedData = transformedData(data);
     if (isEmpty(preparedData)) {
       closeLoadingCreateCamp();
-      showNotification("Thất bại", "Vui lòng reload lại page & thử lại", "red");
+      showNotification("Thất bại", "Vui lòng thử lại", "red");
       return;
     }
     const createCampaignsResult = await campaignServices.createCamps(
@@ -451,6 +460,28 @@ const NewCampaigns = () => {
       );
       setReviewData([]);
       return;
+    }
+    const listKeywords = uniq(
+      compact(map(split(trim(data.keywords), "\n"), (keyword) => trim(keyword)))
+    );
+    if (campType === "ASIN") {
+      const asinPattern = /^[bB]0.*/;
+      const invalidAsins = listKeywords.filter(
+        (keyword) => !asinPattern.test(keyword)
+      );
+      if (invalidAsins.length > 0) {
+        showNotification("Thất bại", "ASIN không hợp lệ", "red");
+        return;
+      }
+    } else if (campType === "KEYWORD") {
+      const pattern = /^(?![Bb]0)[a-zA-Z0-9\s'-]*$/;
+      const invalidKeywords = listKeywords.filter(
+        (keyword) => !pattern.test(keyword)
+      );
+      if (invalidKeywords.length > 0) {
+        showNotification("Thất bại", "Keyword không hợp lệ", "red");
+        return;
+      }
     }
     const preparedData = transformedData(data);
     console.log(preparedData);
