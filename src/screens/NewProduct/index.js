@@ -268,6 +268,16 @@ const NewCampaigns = () => {
     const listKeywords = uniq(
       compact(map(split(trim(keywords), "\n"), (keyword) => trim(keyword)))
     );
+    if (campType === "ASIN") {
+      const asinPattern = /^[bB]0.*/;
+      const invalidAsins = listKeywords.filter(
+        (keyword) => !asinPattern.test(keyword)
+      );
+      if (invalidAsins.length > 0) {
+        showNotification("Thất bại", "ASIN không hợp lệ", "red");
+        return;
+      }
+    }
     let chunkedKeywords = [];
 
     if (selectedCreateCampMethodForKW === 1 && !maximumKwPerCampaign) {
@@ -742,13 +752,6 @@ const NewCampaigns = () => {
                       gap: "15px",
                     }}
                   >
-                    <span>
-                      <MantineToolTip label="Import">
-                        <span style={{ cursor: "pointer" }}>
-                          <IconFileImport color="#83BF6E" />
-                        </span>
-                      </MantineToolTip>
-                    </span>
                     <span>
                       <Autocomplete
                         placeholder="Pick value or enter"
