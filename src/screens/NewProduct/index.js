@@ -115,33 +115,34 @@ const NewCampaigns = () => {
     useState(false);
   const handleKeywordBlur = () => {
     const keywords = getValues("keywords");
-    const pattern = /^(?![Bb]0)[a-zA-Z0-9\s'-]*$/;
-    const invalidKeywords = keywords
-      .split("\n")
-      .filter((keyword) => !pattern.test(keyword));
-    if (invalidKeywords.length > 0) {
-      setError("keywords", {
-        type: "manual",
-        message: "You must enter at least one keyword.",
-      });
-    } else {
-      if (campType === "ASIN") {
-        const asinPattern = /^[bB]0.*/;
-        const invalidAsins = keywords
-          .split("\n")
-          .filter((keyword) => !asinPattern.test(keyword));
-        if (invalidAsins.length > 0) {
-          setError("keywords", {
-            type: "manual",
-            message: "You must enter at least one ASIN.",
-          });
-        } else {
-          clearErrors("keywords");
-        }
+    if (campType === "KEYWORD") {
+      const pattern = /^(?![Bb]0)[a-zA-Z0-9\s'-]*$/;
+      const invalidKeywords = keywords
+        .split("\n")
+        .filter((keyword) => !pattern.test(keyword));
+      if (invalidKeywords.length > 0) {
+        setError("keywords", {
+          type: "manual",
+          message: "You must enter at least one keyword.",
+        });
+      } else {
+        clearErrors("keywords");
+      }
+    } else if (campType === "ASIN") {
+      const asinPattern = /^[bB]0.*/;
+      const invalidAsins = keywords
+        .split("\n")
+        .filter((keyword) => !asinPattern.test(keyword));
+      if (invalidAsins.length > 0) {
+        setError("keywords", {
+          type: "manual",
+          message: "You must enter at least one ASIN.",
+        });
       } else {
         clearErrors("keywords");
       }
     }
+
     const count = keywords?.split("\n").filter(Boolean).length;
     setKeywordCount(count || 0);
   };
