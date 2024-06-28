@@ -40,14 +40,8 @@ import moment from "moment-timezone";
 import Table from "./CampaignInfo/Table";
 import CryptoJS from "crypto-js";
 import { useDisclosure } from "@mantine/hooks";
-import {
-  Autocomplete,
-  Box,
-  LoadingOverlay,
-  Tooltip as MantineToolTip,
-} from "@mantine/core";
+import { Autocomplete, Box, LoadingOverlay } from "@mantine/core";
 import { showNotification } from "../../utils/index";
-import { IconFileImport } from "@tabler/icons-react";
 import ProductLine from "./ProductLine";
 import {
   campaignServices,
@@ -131,7 +125,22 @@ const NewCampaigns = () => {
         message: "You must enter at least one keyword.",
       });
     } else {
-      clearErrors("keywords");
+      if (campType === "ASIN") {
+        const asinPattern = /^[bB]0.*/;
+        const invalidAsins = keywords
+          .split("\n")
+          .filter((keyword) => !asinPattern.test(keyword));
+        if (invalidAsins.length > 0) {
+          setError("keywords", {
+            type: "manual",
+            message: "You must enter at least one ASIN.",
+          });
+        } else {
+          clearErrors("keywords");
+        }
+      } else {
+        clearErrors("keywords");
+      }
     }
     const count = keywords?.split("\n").filter(Boolean).length;
     setKeywordCount(count || 0);
@@ -742,7 +751,7 @@ const NewCampaigns = () => {
                     </span>
                     <span>
                       <Autocomplete
-                        placeholder="Pick value or enter anything"
+                        placeholder="Pick value or enter"
                         data={map(allTemplates, "name") || []}
                         withScrollArea={false}
                         styles={{
