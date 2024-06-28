@@ -1,23 +1,42 @@
 import React, { useState, useMemo, useEffect } from "react";
 import { MantineReactTable, useMantineReactTable } from "mantine-react-table";
-import { Button, Flex, Text, Tooltip } from "@mantine/core";
+import { Button, Flex, Text, Textarea, Tooltip } from "@mantine/core";
 import { modals } from "@mantine/modals";
 import { useMutation } from "@tanstack/react-query";
 import Icon from "../../../components/Icon";
 import { keywordServices } from "../../../services";
 import { showNotification } from "../../../utils/index";
-import { compact, filter, includes, map, uniq } from "lodash";
+import { compact, filter, includes, isEmpty, map, split, uniq } from "lodash";
+import { useEdit } from "../../../hooks";
 
 //CREATE hook (post new user to api)
 function useCreateKeyword(name, exKeywords, setKeywords) {
   return useMutation({
     mutationFn: async (keyword) => {
-      if (includes(exKeywords, keyword)) {
-        showNotification("Thất bại", "Keyword đã tồn tại", "red");
-        return;
-      }
+      const { keyword: keywordValue } = keyword;
+      const transformedKeywordValues = compact(split(keywordValue, "\n"));
+      const originalKeywordLength = transformedKeywordValues.length;
+      const filteredKeywordValues = filter(
+        transformedKeywordValues,
+        (item) => !includes(map(exKeywords, "keyword"), item)
+      );
+      const uniqueKeywordValues = map(
+        uniq(filteredKeywordValues),
+        (keyword) => ({ keyword })
+      );
+      const newKeywordLength = uniqueKeywordValues.length;
+      if (newKeywordLength > 0)
+        showNotification(
+          "Thông tin",
+          `${newKeywordLength}/${originalKeywordLength} được add-in thêm`,
+          "yellow"
+        );
+      if (isEmpty(uniqueKeywordValues))
+        return Promise.reject("Không có keyword mới");
       //send api update request here
-      const newKeywords = exKeywords ? [keyword, ...exKeywords] : [keyword];
+      const newKeywords = exKeywords
+        ? [...uniqueKeywordValues, ...exKeywords]
+        : uniqueKeywordValues;
       const transformedKeywords = uniq(map(newKeywords, "keyword"));
       const createNewKeywordResponse =
         await keywordServices.createNewKeywordInTemplate({
@@ -38,25 +57,59 @@ function useCreateKeyword(name, exKeywords, setKeywords) {
       );
     },
     onError: (error) => {
-      showNotification("Thất bại", error.message, "red");
+      showNotification("Thất bại", error, "red");
     },
   });
 }
 
-//UPDATE hook (put user in api)
+//UPDATE hook (put keyword in api)
 function useUpdateKeyword(name, exKeywords, setKeywords) {
   return useMutation({
     mutationFn: async (keyword) => {
       const { id, values } = keyword;
-      const newKeywords = exKeywords.map((item) => {
-        if (item.id === id) {
-          return {
-            ...item,
-            ...values,
-          };
+      let uniqueKeywordValues = [];
+      if (id === undefined) {
+        const { keyword: keywordValue } = values;
+        const transformedKeywordValues = compact(split(keywordValue, "\n"));
+        const originalKeywordLength = transformedKeywordValues.length;
+        const filteredKeywordValues = filter(
+          transformedKeywordValues,
+          (item) => !includes(map(exKeywords, "keyword"), item)
+        );
+        uniqueKeywordValues = map(uniq(filteredKeywordValues), (keyword) => ({
+          keyword,
+        }));
+        const newKeywordLength = uniqueKeywordValues.length;
+        if (newKeywordLength > 0) {
+          showNotification(
+            "Thông tin",
+            `${newKeywordLength}/${originalKeywordLength} được add-in thêm`,
+            "yellow"
+          );
         }
-        return item;
-      });
+
+        if (isEmpty(uniqueKeywordValues))
+          return Promise.reject("Không có keyword mới");
+      }
+
+      let newKeywords = [];
+      if (id !== undefined) {
+        if (includes(map(exKeywords, "keyword"), values.keyword)) {
+          return Promise.reject("Keyword đã tồn tại");
+        }
+        newKeywords = exKeywords.map((item) => {
+          if (item.id === id) {
+            return {
+              ...item,
+              keyword: values.keyword,
+            };
+          }
+          return item;
+        });
+      } else {
+        newKeywords = [...uniqueKeywordValues, ...exKeywords];
+      }
+
       const transformedKeywords = uniq(map(newKeywords, "keyword"));
       //send api update request here
       const createNewKeywordResponse =
@@ -78,12 +131,12 @@ function useUpdateKeyword(name, exKeywords, setKeywords) {
       );
     },
     onError: (error) => {
-      showNotification("Thất bại", error.message, "red");
+      showNotification("Thất bại", error.message || error, "red");
     },
   });
 }
 
-//DELETE hook (delete user in api)
+//DELETE hook (delete keyword in api)
 function useDeleteKeyword(name, exKeywords, setKeywords) {
   return useMutation({
     mutationFn: async (keyword) => {
@@ -141,6 +194,17 @@ const KeywordTable = ({ keywords, name }) => {
               data: undefined,
             }),
         },
+        Edit: (props) => {
+          const { value, handleOnChange, handleBlur } = useEdit(props);
+          return (
+            <Textarea
+              data={data}
+              value={value}
+              onBlur={handleBlur}
+              onChange={(event) => handleOnChange(event.currentTarget.value)}
+            />
+          );
+        },
       },
     ],
     [validationErrors]
@@ -182,7 +246,7 @@ const KeywordTable = ({ keywords, name }) => {
       setValidationErrors({});
       const id = row.original.id;
       await updateKeyword({ values, id });
-      table.setEditingRow(null); //exit editing mode
+      table?.setEditingRow(null); //exit editing mode
     } catch (error) {
       console.log(error);
     }
