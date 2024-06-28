@@ -2,7 +2,7 @@
   "name": "core-digital-marketplace-dashboards",
   "version": "0.1.0",
   "private": true,
-  "homepage": ".",
+  "homepage": "https://amz-dashboard.vercel.app",
   "dependencies": {
     "@mantine/core": "^7.10.2",
     "@mantine/hooks": "^7.10.2",
