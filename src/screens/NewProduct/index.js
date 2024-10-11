@@ -343,29 +343,27 @@ const NewCampaigns = () => {
           const chunkListKeywords = chunkedKeywords[i];
           const firstSKU = transformedSKUs[0];
           const transformedCampType = campType === "KEYWORD" ? "KW" : campType;
-          let campaignName = `${channel}_${firstSKU}${
-            extendPrefix ? "_" + extendPrefix : ""
-          }_${transformedCampType}_${moment().format(
-            "MMMDD"
-          )}_${generateRandomBytes(6)}`;
-          if (strategy && strategy === "UP_AND_DOWN") {
-            campaignName = `${channel}_${firstSKU}${
-              extendPrefix ? "_" + extendPrefix : ""
-            }_${transformedCampType}_U&D_${moment().format(
+          let campaignName = `${channel}_${firstSKU}${extendPrefix ? "_" + extendPrefix : ""
+            }_${transformedCampType}_${moment().format(
               "MMMDD"
             )}_${generateRandomBytes(6)}`;
+          if (strategy && strategy === "UP_AND_DOWN") {
+            campaignName = `${channel}_${firstSKU}${extendPrefix ? "_" + extendPrefix : ""
+              }_${transformedCampType}_U&D_${moment().format(
+                "MMMDD"
+              )}_${generateRandomBytes(6)}`;
           }
           preparedData.push({
             skus: join(transformedSKUs, ","),
             ...(campType === "KEYWORD"
               ? {
-                  keywords: join(chunkListKeywords, ","),
-                }
+                keywords: join(chunkListKeywords, ","),
+              }
               : campType === "ASIN"
-              ? {
+                ? {
                   asins: join(chunkListKeywords, ","),
                 }
-              : {}),
+                : {}),
             store,
             defaultBid,
             state: "ENABLED",
@@ -378,7 +376,7 @@ const NewCampaigns = () => {
             adGroupName: `Ad group - ${moment().format(
               "YYYY-MM-DD HH:mm:ss.SSS"
             )}`,
-            campaignName,
+            campaignName: `[1]_${campaignName}`,
             strategy: MAPPED_STRATEGY[strategy],
             portfolioId: foundPortfolio?.portfolioId,
           });
