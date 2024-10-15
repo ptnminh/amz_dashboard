@@ -8,8 +8,10 @@ import Dropdown from "../../../components/Dropdown";
 import Checkbox from "../../../components/Checkbox";
 import {
   CAMP_TYPES,
+  CAMPAIGN_POSTFIX,
   CHANNELS_OPTIONS,
   CREATE_SKU_CAMP_METHOD,
+  STRATEGIES,
 } from "../../../constant";
 import { isEmpty } from "lodash";
 import Loader from "../../../components/Loader";
@@ -40,6 +42,8 @@ const CampaignInfo = ({
   loadingAvailableStores,
   selectAvailableStore,
   setSelectAvailableStore,
+  campaignPrefix,
+  setCampaignPrefix,
 }) => {
   useEffect(() => {
     if (!isEmpty(previewData)) setVisibleReviewTable(true);
@@ -175,6 +179,16 @@ const CampaignInfo = ({
           </>
         }
       >
+        <Dropdown
+          className={styles.dropdown}
+          classDropdownLabel={styles.label}
+          classDropdownHead={styles.classDropdownHead}
+          value={campaignPrefix}
+          setValue={setCampaignPrefix}
+          options={CAMPAIGN_POSTFIX}
+          label={"Prefix"}
+          classOutsideClick={styles.outsideClick}
+        />
         <TextInput
           style={{ marginTop: "12px" }}
           className={styles.field}

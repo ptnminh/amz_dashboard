@@ -95,6 +95,7 @@ const NewCampaigns = () => {
     DEFAULT_VALUES_NAVIGATIONS[0]
   );
   const [strategy, setStrategy] = useState(STRATEGIES[0]);
+  const [campaignPrefix, setCampaignPrefix] = useState("");
   const [matchType, setMatchType] = useState(MATCH_TYPES[0]);
   const [expressionType, setExpressionType] = useState(EXPRESSION_TYPES[0]);
   const [visiblePreviewData, setVisiblePreviewData] = useState(false);
@@ -343,27 +344,29 @@ const NewCampaigns = () => {
           const chunkListKeywords = chunkedKeywords[i];
           const firstSKU = transformedSKUs[0];
           const transformedCampType = campType === "KEYWORD" ? "KW" : campType;
-          let campaignName = `${channel}_${firstSKU}${extendPrefix ? "_" + extendPrefix : ""
-            }_${transformedCampType}_${moment().format(
+          let campaignName = `${channel}_${firstSKU}${
+            extendPrefix ? "_" + extendPrefix : ""
+          }_${transformedCampType}_${moment().format(
+            "MMMDD"
+          )}_${generateRandomBytes(6)}`;
+          if (strategy && strategy === "UP_AND_DOWN") {
+            campaignName = `${channel}_${firstSKU}${
+              extendPrefix ? "_" + extendPrefix : ""
+            }_${transformedCampType}_U&D_${moment().format(
               "MMMDD"
             )}_${generateRandomBytes(6)}`;
-          if (strategy && strategy === "UP_AND_DOWN") {
-            campaignName = `${channel}_${firstSKU}${extendPrefix ? "_" + extendPrefix : ""
-              }_${transformedCampType}_U&D_${moment().format(
-                "MMMDD"
-              )}_${generateRandomBytes(6)}`;
           }
           preparedData.push({
             skus: join(transformedSKUs, ","),
             ...(campType === "KEYWORD"
               ? {
-                keywords: join(chunkListKeywords, ","),
-              }
+                  keywords: join(chunkListKeywords, ","),
+                }
               : campType === "ASIN"
-                ? {
+              ? {
                   asins: join(chunkListKeywords, ","),
                 }
-                : {}),
+              : {}),
             store,
             defaultBid,
             state: "ENABLED",
@@ -376,7 +379,9 @@ const NewCampaigns = () => {
             adGroupName: `Ad group - ${moment().format(
               "YYYY-MM-DD HH:mm:ss.SSS"
             )}`,
-            campaignName: `[1]_${campaignName}`,
+            campaignName: campaignPrefix
+              ? `${campaignPrefix}_${campaignName}`
+              : campaignName,
             strategy: MAPPED_STRATEGY[strategy],
             portfolioId: foundPortfolio?.portfolioId,
           });
@@ -587,6 +592,8 @@ const NewCampaigns = () => {
               loadingAvailableStores={loadingAvailableStores}
               selectAvailableStore={selectAvailableStore}
               setSelectAvailableStore={setSelectAvailableStore}
+              campaignPrefix={campaignPrefix}
+              setCampaignPrefix={setCampaignPrefix}
             />
             {createCampaignResult && visibleCreateCampResult && (
               <Card

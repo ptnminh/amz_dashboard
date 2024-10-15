@@ -1,5 +1,6 @@
 export const DEFAULT_VALUES_NAVIGATIONS = ["Default", "Edit"];
 export const STRATEGIES = ["DOWN_ONLY", "UP_AND_DOWN"];
+export const CAMPAIGN_POSTFIX = ["[1]", "[Star]", "[EG]"];
 export const MATCH_TYPES = ["BROAD", "EXACT", "PHRASE"];
 export const EXPRESSION_TYPES = [
   "ASIN_SAME_AS",
