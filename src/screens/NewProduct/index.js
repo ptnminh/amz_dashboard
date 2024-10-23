@@ -321,9 +321,10 @@ const NewCampaigns = () => {
       for (let index = 0; index < chunkedSKUs.length; index++) {
         const chunkListSKUs = chunkedSKUs[index];
         const transformedSKUs = map(chunkListSKUs, (SKU) => {
-          if (store !== "PFH") {
-            return `${SKU}-${STORE_PREFIX_BRAND[store].prefix}`;
-          }
+          // TODO: Remove this code when PFH is available
+          // if (store !== "PFH") {
+          //   return `${SKU}-${STORE_PREFIX_BRAND[store].prefix}`;
+          // }
           return SKU;
         });
 
