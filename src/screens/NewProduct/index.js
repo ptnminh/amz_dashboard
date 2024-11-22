@@ -50,6 +50,8 @@ import {
 } from "../../services";
 import { Tooltip } from "react-tooltip";
 
+const keywordPattern = /^(?![Bb]0)[a-zA-Z0-9\s'&-]*$/;
+
 const generateRandomBytes = (length) => {
   return CryptoJS.lib.WordArray.random(length).toString();
 };
@@ -117,10 +119,9 @@ const NewCampaigns = () => {
   const handleKeywordBlur = () => {
     const keywords = getValues("keywords");
     if (campType === "KEYWORD") {
-      const pattern = /^(?![Bb]0)[a-zA-Z0-9\s'-]*$/;
       const invalidKeywords = keywords
         .split("\n")
-        .filter((keyword) => !pattern.test(keyword));
+        .filter((keyword) => !keywordPattern.test(keyword));
       if (invalidKeywords.length > 0) {
         setError("keywords", {
           type: "manual",
@@ -280,9 +281,8 @@ const NewCampaigns = () => {
         return;
       }
     } else if (campType === "KEYWORD") {
-      const pattern = /^(?![Bb]0)[a-zA-Z0-9\s'-]*$/;
       const invalidKeywords = listKeywords.filter(
-        (keyword) => !pattern.test(keyword)
+        (keyword) => !keywordPattern.test(keyword)
       );
       if (invalidKeywords.length > 0) {
         showNotification("Thất bại", "Keyword không hợp lệ", "red");
@@ -479,9 +479,8 @@ const NewCampaigns = () => {
         return;
       }
     } else if (campType === "KEYWORD") {
-      const pattern = /^(?![Bb]0)[a-zA-Z0-9\s'-]*$/;
       const invalidKeywords = listKeywords.filter(
-        (keyword) => !pattern.test(keyword)
+        (keyword) => !keywordPattern.test(keyword)
       );
       if (invalidKeywords.length > 0) {
         showNotification("Thất bại", "Keyword không hợp lệ", "red");
