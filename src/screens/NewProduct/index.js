@@ -418,12 +418,23 @@ const NewCampaigns = () => {
       setCreateCampaignResult(createCampaignsResult);
       showNotification("Thành công", "Tạo campaign thành công", "green");
     }
+    setValue("keywords", "");
+    setValue("extendPrefix", "");
+    setValue("portfolioId", "");
     setPortfolioId("");
     setPortfolios([]);
     setReviewData([]);
+    setVisiblePreviewData(false);
+    setCreateCampaignResult("");
+    setActiveDefaultValueTab(DEFAULT_VALUES_NAVIGATIONS[0]);
+    setCampType(CAMP_TYPES[0]);
+    setValue("maximumKwPerCampaign", null);
+    setValue("maximumSKUPerCampaign", null);
+    setSelectedCreateCampMethodForKW(1);
+
     closeLoadingCreateCamp();
     setVisibleCreateCampResult(true);
-    handleResetData();
+
     return true;
   };
 
