@@ -423,6 +423,7 @@ const NewCampaigns = () => {
     setReviewData([]);
     closeLoadingCreateCamp();
     setVisibleCreateCampResult(true);
+    handleResetData();
     return true;
   };
 
@@ -507,6 +508,7 @@ const NewCampaigns = () => {
     setCampType(CAMP_TYPES[0]);
     setValue("maximumKwPerCampaign", null);
     setValue("maximumSKUPerCampaign", null);
+    setSelectedCreateCampMethodForKW(1);
   };
 
   useEffect(() => {
