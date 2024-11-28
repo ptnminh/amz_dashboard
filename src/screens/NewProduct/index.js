@@ -844,7 +844,8 @@ const NewCampaigns = () => {
                       placeholder={campTypePlaceHolder}
                       register={register("keywords", {
                         required: campType !== "AUTO",
-                        pattern: /^[a-zA-Z0-9\s]+$/,
+                        pattern:
+                          campType === "ASIN" ? /^[bB]0.*/ : keywordPattern,
                       })}
                       error={errors.keywords}
                     />
