@@ -526,27 +526,27 @@ const NewCampaigns = () => {
     switch (campType) {
       case "AUTO":
         if (activeDefaultValueTab === "Default") {
-          setValue("defaultBid", 1.23);
+          setValue("defaultBid", 1);
           setValue("budget", 15);
-          setValue("topOfSearch", 0);
+          setValue("topOfSearch", 40);
         }
         break;
       case "KEYWORD":
         if (activeDefaultValueTab === "Default") {
-          setValue("defaultBid", 1.23);
+          setValue("defaultBid", 1);
           setValue("budget", 15);
-          setValue("topOfSearch", 0);
-          setValue("bid", 1.23);
+          setValue("topOfSearch", 40);
+          setValue("bid", 1);
         }
         setCampTypePlaceHolder(`father gifts\ngifts\nmother gifts`);
         setCampTypeTitle("KW");
         break;
       case "ASIN":
         if (activeDefaultValueTab === "Default") {
-          setValue("defaultBid", 1.23);
+          setValue("defaultBid", 1);
           setValue("budget", 15);
-          setValue("topOfSearch", 0);
-          setValue("bid", 1.23);
+          setValue("topOfSearch", 40);
+          setValue("bid", 1);
         }
         setCampTypePlaceHolder(`B0C99KFYS6\nB09P48SXPN\nB0CBKT4SJ5`);
         setCampTypeTitle("ASIN");
