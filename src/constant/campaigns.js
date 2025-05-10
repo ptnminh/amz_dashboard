@@ -17,7 +17,7 @@ export const EXPRESSION_TYPES = [
   // "ASIN_GENRE_SAME_AS",
   // "ASIN_EXPANDED_FROM",
 ];
-export const STORES = ["PFH", "QZL", "GGT", "KH", "PG", "PPN", "BIG"];
+export const STORES = ["PFH", "QZL", "TJC", "GGT", "KH", "PG", "PPN", "BIG"];
 export const CHANNELS = ["FBM", "FBA"];
 export const CHANNELS_OPTIONS = [
   {
