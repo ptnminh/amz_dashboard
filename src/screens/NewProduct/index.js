@@ -50,7 +50,7 @@ import {
 } from "../../services";
 import { Tooltip } from "react-tooltip";
 
-const keywordPattern = /^(?![Bb]0)[a-zA-Z0-9\s'&-]*$/;
+const keywordPattern = /^(?![Bb]0)[a-zA-Z0-9\s'&\-+]*$/;
 
 const generateRandomBytes = (length) => {
   return CryptoJS.lib.WordArray.random(length).toString();
