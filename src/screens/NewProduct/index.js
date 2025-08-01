@@ -527,14 +527,14 @@ const NewCampaigns = () => {
       case "AUTO":
         if (activeDefaultValueTab === "Default") {
           setValue("defaultBid", 0.75);
-          setValue("budget", 12);
+          setValue("budget", 10);
           setValue("topOfSearch", 40);
         }
         break;
       case "KEYWORD":
         if (activeDefaultValueTab === "Default") {
           setValue("defaultBid", 0.75);
-          setValue("budget", 12);
+          setValue("budget", 10);
           setValue("topOfSearch", 40);
           setValue("bid", 0.75);
         }
@@ -544,7 +544,7 @@ const NewCampaigns = () => {
       case "ASIN":
         if (activeDefaultValueTab === "Default") {
           setValue("defaultBid", 0.75);
-          setValue("budget", 12);
+          setValue("budget", 10);
           setValue("topOfSearch", 40);
           setValue("bid", 0.75);
         }
